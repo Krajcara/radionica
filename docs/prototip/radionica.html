@@ -1,0 +1,1022 @@
+<!doctype html>
+<html lang="sr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Radionica: lager i krojne liste</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#E7EAE8; --surface:#F7F8F6; --surface2:#EEF1EF; --ink:#1E2226; --muted:#5C676D;
+  --line:#C6CDCA; --steel:#3D5A6C; --chip:#D9BD8F; --sheet:#EBDDC3; --wood:#C99A62;
+  --warn:#A63F2B; --warn-soft:#F3DDD6; --ok:#3E6B4A; --ok-soft:#DCE9DF;
+  --body:"Barlow","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --cond:"Barlow Condensed","Arial Narrow","Roboto Condensed",sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#15181A; --surface:#1E2326; --surface2:#262C2F; --ink:#E4E8E6; --muted:#98A4A9;
+    --line:#353D41; --steel:#86A8BE; --chip:#C9A774; --sheet:#3A3226; --wood:#B98A55;
+    --warn:#E6806A; --warn-soft:#3B2420; --ok:#8BC49A; --ok-soft:#1F3226; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15181A; --surface:#1E2326; --surface2:#262C2F; --ink:#E4E8E6; --muted:#98A4A9;
+  --line:#353D41; --steel:#86A8BE; --chip:#C9A774; --sheet:#3A3226; --wood:#B98A55;
+  --warn:#E6806A; --warn-soft:#3B2420; --ok:#8BC49A; --ok-soft:#1F3226; color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.45;min-height:100%}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--steel);outline-offset:2px}
+.wrap{max-width:1400px;margin:0 auto;padding:0 clamp(14px,4vw,40px)}
+
+header.top{padding-top:24px}
+.titlebar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h1{font-family:var(--cond);font-weight:700;font-size:clamp(32px,5vw,50px);line-height:1;margin:0;letter-spacing:-.01em}
+.status{font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--muted);display:inline-block}
+.status.cloud i{background:var(--ok)} .status.err i{background:var(--warn)}
+nav.main{display:flex;gap:4px;margin-top:20px;border-bottom:2px solid var(--ink);overflow-x:auto}
+nav.main button{appearance:none;border:0;background:none;padding:9px 18px 8px;font-family:var(--cond);font-weight:600;font-size:22px;cursor:pointer;color:var(--muted);border-radius:6px 6px 0 0;white-space:nowrap}
+nav.main button[aria-current="page"]{background:var(--ink);color:var(--bg)}
+
+main{padding-top:22px;padding-bottom:60px}
+h2{font-family:var(--cond);font-weight:600;font-size:26px;margin:0}
+h3{font-family:var(--cond);font-weight:600;font-size:21px;margin:0}
+.hint{margin:4px 0 12px;color:var(--muted);font-size:14px;max-width:70ch}
+
+.subtabs{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 18px}
+.subtabs button{border:1px solid var(--line);background:var(--surface);padding:6px 14px;border-radius:20px;cursor:pointer;display:flex;align-items:center;gap:8px;font-weight:500}
+.subtabs button[aria-selected="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.dot{width:12px;height:12px;border-radius:2px;flex:none}
+.dot.metal{background:linear-gradient(90deg,#6f8594,#c3d0d8 50%,#6f8594)}
+.dot.iverica{background:#D9BD8F;background-image:radial-gradient(circle at 30% 40%,rgba(0,0,0,.3) 1px,transparent 1.5px);background-size:4px 4px}
+.dot.sper{background:repeating-linear-gradient(0deg,#e3c99a 0 2px,#b98f55 2px 3px)}
+.dot.drvo{background:repeating-linear-gradient(90deg,#c99a62 0 3px,#a8793f 3px 4px)}
+.badge{font-size:12px;font-weight:600;padding:0 7px;border-radius:10px;background:var(--surface2);color:var(--ink)}
+.subtabs button[aria-selected="true"] .badge{background:var(--bg);color:var(--ink)}
+.badge.bad{background:var(--warn-soft);color:var(--warn)}
+.badge.good{background:var(--ok-soft);color:var(--ok)}
+
+.grid2{display:grid;grid-template-columns:minmax(330px,520px) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:960px){.grid2{grid-template-columns:1fr}}
+
+.tablewrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%}
+th{font-weight:500;font-size:13px;color:var(--muted);text-align:left;padding:7px 6px 5px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:3px 4px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+td input[type=text],td input[type=number],td select{width:100%;min-width:58px;border:1px solid transparent;background:transparent;padding:6px;border-radius:4px}
+td input[type=text]{min-width:90px}
+td select{min-width:100px;cursor:pointer}
+td input:hover,td select:hover{border-color:var(--line)}
+td input:focus,td select:focus{border-color:var(--steel);background:var(--surface2);outline:none}
+td input[type=number]{text-align:right;font-variant-numeric:tabular-nums}
+td input:disabled,td select:disabled{color:var(--muted);border-color:transparent}
+td.c{text-align:center}
+td input[type=checkbox]{width:18px;height:18px;accent-color:var(--steel)}
+td.emptyrow{padding:14px;color:var(--muted)}
+.del{border:0;background:none;color:var(--muted);font-size:20px;line-height:1;padding:4px 8px;cursor:pointer;border-radius:4px}
+.del:hover{color:var(--warn);background:var(--warn-soft)}
+.btn{border:1px solid var(--ink);background:transparent;padding:6px 14px;border-radius:4px;cursor:pointer;font-weight:500}
+.btn:hover{background:var(--ink);color:var(--bg)}
+.btn.solid{background:var(--ink);color:var(--bg)}
+.btn.solid:hover{opacity:.88}
+.btn.quiet{border-color:var(--line);color:var(--muted)}
+.btn.quiet:hover{background:var(--surface2);color:var(--ink)}
+.btn.danger,.btn.danger:hover{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.add{margin-top:8px}
+.linkbtn{border:0;background:none;padding:0;color:var(--muted);cursor:pointer;text-decoration:underline;text-underline-offset:3px;font-size:15px}
+.linkbtn:hover{color:var(--ink)}
+.summary-line{margin-top:10px;color:var(--muted);font-size:14px}
+
+/* projects list */
+.list-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.plist{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pcard{text-align:left;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--line);border-radius:6px;padding:14px 16px;cursor:pointer;display:flex;flex-direction:column;gap:4px}
+.pcard:hover{border-color:var(--ink)}
+.pcard.ok{border-left-color:var(--ok)} .pcard.bad{border-left-color:var(--warn)} .pcard.done{border-left-color:var(--steel)}
+.pcard b{font-family:var(--cond);font-size:21px;font-weight:600;line-height:1.15}
+.pcard span{font-size:14px;color:var(--muted)}
+.pcard .st.ok{color:var(--ok)} .pcard .st.bad{color:var(--warn)}
+.empty{color:var(--muted);background:var(--surface);border:1px dashed var(--line);border-radius:6px;padding:22px}
+
+/* project */
+.phead{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.pname{font-family:var(--cond);font-weight:700;font-size:clamp(28px,4vw,40px);border:1px solid transparent;background:transparent;padding:2px 6px;margin-left:-7px;border-radius:4px;width:100%;max-width:780px}
+.pname:hover{border-color:var(--line)} .pname:focus{border-color:var(--steel);outline:none;background:var(--surface)}
+.verdict{font-family:var(--cond);font-size:clamp(26px,3.2vw,36px);font-weight:600;line-height:1.1;margin:0 0 6px}
+.verdict.ok{color:var(--ok)} .verdict.bad{color:var(--warn)}
+.sub{color:var(--muted);margin:0 0 18px;max-width:72ch}
+.catstat{background:var(--surface);border:1px solid var(--line);border-radius:6px;margin-bottom:18px}
+.catstat .row{display:grid;grid-template-columns:150px 110px 1fr;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:baseline}
+.catstat .row:last-child{border-bottom:0}
+.catstat .row b{display:flex;align-items:center;gap:8px;font-weight:600}
+.catstat .row .n{font-variant-numeric:tabular-nums}
+.catstat .row .d{color:var(--muted);font-size:14px}
+@media (max-width:600px){.catstat .row{grid-template-columns:1fr auto}.catstat .row .d{grid-column:1/-1}}
+.buy{background:var(--warn-soft);border-left:4px solid var(--warn);border-radius:0 6px 6px 0;padding:14px 18px;margin-bottom:18px}
+.buy h3{color:var(--warn);margin-bottom:6px}
+.buy ul{margin:0;padding-left:20px}
+.buy li{margin:3px 0}
+.buy .note{margin:10px 0 0;font-size:14px;color:var(--muted)}
+.missing{background:var(--warn-soft);border-left:4px solid var(--warn);padding:12px 16px;border-radius:0 6px 6px 0;margin:0 0 20px}
+.missing h4{margin:0 0 6px;font-size:16px;color:var(--warn)}
+.missing ul{margin:0;padding-left:18px}
+.done-banner{background:var(--surface);border:1px solid var(--steel);border-left:5px solid var(--steel);border-radius:6px;padding:14px 18px;margin-bottom:18px}
+.done-banner p{margin:0 0 10px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px}
+.actions .hint{margin:0}
+.group-title{font-family:var(--cond);font-size:20px;font-weight:600;margin:22px 0 10px;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.group-title:first-child{margin-top:0}
+.unused{font-size:14px;color:var(--muted);margin-top:8px}
+.rverdict{font-family:var(--cond);font-size:26px;font-weight:600;margin:0 0 4px}
+.rverdict.ok{color:var(--ok)}
+
+/* 1D bars */
+.pipe{margin:0 0 18px}
+.pipe-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:14px;margin-bottom:5px}
+.pipe-head b{font-weight:600} .pipe-head span{color:var(--muted)}
+.bar{display:flex;height:40px;border-radius:3px;overflow:hidden;background:var(--surface2);border:1px solid var(--line)}
+.seg{height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:12px;font-weight:600;color:#1E2226;white-space:nowrap;min-width:0}
+.seg.metal{background:linear-gradient(180deg,#9fb1bd 0%,#d4dde3 45%,#a9bac5 100%)}
+.seg.drvo{background:repeating-linear-gradient(90deg,#d8b17e 0 9px,#c9a06a 9px 11px,#dcb988 11px 17px)}
+.kerf{flex:none;width:2px;background:var(--warn)}
+.rest{flex:1 1 auto;min-width:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--muted);background:repeating-linear-gradient(45deg,transparent 0 6px,var(--line) 6px 7px)}
+.cutlist{margin:6px 0 0;padding:0;list-style:none;font-size:14px;display:flex;flex-wrap:wrap;gap:3px 18px}
+.cutlist li{font-variant-numeric:tabular-nums}
+.cutlist .x{color:var(--muted)}
+
+/* sheets */
+.sheet-card{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:14px;margin:0 0 18px}
+.sheet-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px;font-size:14px}
+.sheet-head b{font-weight:600;font-size:16px} .sheet-head span{color:var(--muted)}
+svg.sheet{display:block;width:100%;height:auto;max-height:70vh}
+.sh-bg{fill:var(--sheet)}
+.sh-trim{fill:none;stroke:var(--muted);stroke-dasharray:6 4}
+.grain{stroke:var(--muted);opacity:.35}
+.pt{stroke:#3a2f22;stroke-width:1}
+.pt-n{font-family:var(--cond);font-weight:700;fill:#1E2226}
+.pt-d{font-family:var(--body);fill:#2c2f31}
+.off{fill:url(#hatch);stroke:var(--muted);stroke-width:1;stroke-dasharray:4 3}
+.off-t{font-family:var(--body);fill:var(--muted)}
+.hatch-line{stroke:var(--muted);stroke-width:1.5;opacity:.55}
+.legend{columns:2 220px;margin:12px 0 0;padding:0;list-style:none;font-size:14px}
+.legend li{break-inside:avoid;display:flex;gap:8px;align-items:baseline;padding:2px 0;font-variant-numeric:tabular-nums}
+.legend .n{font-family:var(--cond);font-weight:700;min-width:22px;text-align:center;border-radius:3px;padding:0 4px;color:#1E2226}
+.legend .r{color:var(--muted);font-size:13px}
+.offlist{margin:10px 0 0;font-size:13px;color:var(--muted)}
+
+/* settings */
+.setgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px}
+fieldset{border:1px solid var(--line);border-radius:6px;background:var(--surface);padding:12px 16px 16px;margin:0}
+legend{font-family:var(--cond);font-weight:600;font-size:20px;padding:0 6px}
+.field{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:6px 0;font-size:15px}
+.field input{width:100px;border:1px solid var(--line);border-radius:4px;padding:6px 8px;background:var(--surface2);text-align:right;font-variant-numeric:tabular-nums}
+.field small{display:block;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <pattern id="hatch" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line class="hatch-line" x1="0" y1="0" x2="0" y2="22"/></pattern>
+</defs></svg>
+
+<header class="top wrap">
+  <div class="titlebar">
+    <h1>Radionica</h1>
+    <div class="status" id="status"><i></i><span>Čuvam u ovom pregledaču</span></div>
+  </div>
+  <nav class="main" aria-label="Glavni meni">
+    <button data-view="projects">Projekti</button>
+    <button data-view="lager">Lager</button>
+    <button data-view="settings">Podešavanja</button>
+  </nav>
+</header>
+<main class="wrap" id="app"></main>
+
+<script>
+/* ================= helpers ================= */
+const uid = () => Math.random().toString(36).slice(2, 10);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num = v => { const n = parseFloat(String(v ?? '').replace(',', '.')); return isFinite(n) ? n : 0; };
+const fmt = n => (Math.round(n * 10) / 10).toLocaleString('sr-RS', {maximumFractionDigits: 1});
+const norm = s => String(s || '').trim().toLowerCase().replace(/\s+/g, ' ').replace(/[×*]/g, 'x').replace(/\s*x\s*/g, 'x');
+const clone = o => JSON.parse(JSON.stringify(o));
+const lexLess = (a, b) => { for (let i = 0; i < a.length; i++) { if (a[i] < b[i] - 1e-9) return true; if (a[i] > b[i] + 1e-9) return false; } return false; };
+const HUES = [205, 32, 150, 350, 262, 90, 190, 15, 300, 55, 120, 230];
+const partColor = i => `hsl(${HUES[i % HUES.length]} 45% 74%)`;
+const plural = (n, one, few, many) => { const m10 = n % 10, m100 = n % 100; if (m10 === 1 && m100 !== 11) return one; if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few; return many; };
+const dateStr = iso => { try { return new Date(iso).toLocaleDateString('sr-RS').replace(/\.$/, ''); } catch (e) { return ''; } };
+const allCut = n => n === 1 ? 'Jedini deo može da se iseče iz lagera.' : (n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? `Sva ${n} dela mogu da se iseku iz lagera.` : `Svih ${n} delova može da se iseče iz lagera.`;
+const missFor = n => `Fali materijal za ${n} ${plural(n, 'deo', 'dela', 'delova')}`;
+
+const CATS = {
+  metal:   {name: 'Metal',     kind: '1d'},
+  iverica: {name: 'Iverica',   kind: '2d'},
+  sper:    {name: 'Šperploča', kind: '2d'},
+  drvo:    {name: 'Drvo',      kind: '1d'},
+};
+const CAT_ORDER = ['metal', 'iverica', 'sper', 'drvo'];
+const GRAIN_IV = [['l', 'Po dužini'], ['w', 'Po širini'], ['none', 'Bez dezena']];
+const GRAIN_SP = [['l', 'Po dužini'], ['w', 'Po širini'], ['none', 'Nije bitno']];
+
+const LCOLS = {
+  metal:   [{k:'profile',l:'Profil',t:'text',ph:'40x40'},{k:'wall',l:'Zid',t:'num'},{k:'len',l:'Dužina',t:'num'},{k:'qty',l:'Kom',t:'num'}],
+  iverica: [{k:'type',l:'Vrsta',t:'text',ph:'18 bela'},{k:'l',l:'Dužina',t:'num'},{k:'w',l:'Širina',t:'num'},{k:'grain',l:'Dezen ide',t:'sel',opts:GRAIN_IV},{k:'qty',l:'Kom',t:'num'}],
+  sper:    [{k:'t',l:'Debljina',t:'num'},{k:'type',l:'Vrsta',t:'text',ph:'breza'},{k:'l',l:'Dužina',t:'num'},{k:'w',l:'Širina',t:'num'},{k:'grain',l:'Žica ide',t:'sel',opts:GRAIN_SP},{k:'qty',l:'Kom',t:'num'}],
+  drvo:    [{k:'species',l:'Drvo',t:'text',ph:'bukva'},{k:'t',l:'Debljina',t:'num'},{k:'w',l:'Širina',t:'num'},{k:'len',l:'Dužina',t:'num'},{k:'planed',l:'Obrađeno',t:'chk'},{k:'qty',l:'Kom',t:'num'}],
+};
+const PCOLS = {
+  metal:   [{k:'name',l:'Naziv',t:'text',ph:'npr. Noga'},{k:'profile',l:'Profil',t:'text',ph:'40x40'},{k:'wall',l:'Zid',t:'num'},{k:'len',l:'Dužina',t:'num'},{k:'qty',l:'Kom',t:'num'}],
+  iverica: [{k:'name',l:'Naziv',t:'text',ph:'npr. Stranica'},{k:'type',l:'Vrsta',t:'text',ph:'18 bela'},{k:'l',l:'Dužina',t:'num'},{k:'w',l:'Širina',t:'num'},{k:'grain',l:'Prati dezen',t:'chk'},{k:'qty',l:'Kom',t:'num'}],
+  sper:    [{k:'name',l:'Naziv',t:'text',ph:'npr. Polica'},{k:'t',l:'Debljina',t:'num'},{k:'type',l:'Vrsta',t:'text',ph:'breza'},{k:'l',l:'Dužina',t:'num'},{k:'w',l:'Širina',t:'num'},{k:'grain',l:'Prati žicu',t:'chk'},{k:'qty',l:'Kom',t:'num'}],
+  drvo:    [{k:'name',l:'Naziv',t:'text',ph:'npr. Letva'},{k:'species',l:'Drvo',t:'text',ph:'bukva'},{k:'t',l:'Debljina',t:'num'},{k:'w',l:'Širina',t:'num'},{k:'len',l:'Dužina',t:'num'},{k:'planed',l:'Obrađeno',t:'chk'},{k:'qty',l:'Kom',t:'num'}],
+};
+const LHINT = {
+  metal: 'Cevi i profili koje imaš. Profil piši uvek isto, npr. 40x40 ili 40x20. Zid je debljina zida cevi u milimetrima.',
+  iverica: 'Za svaku ploču izaberi kako ide dezen. Kod jednobojne iverice izaberi „Bez dezena“, pa se delovi slobodno okreću.',
+  sper: 'Debljina je u milimetrima, a vrsta je npr. breza, topola ili vodootporna. Delovi se kroje samo iz ploče iste debljine i vrste.',
+  drvo: 'Daske, grede i letve. Presek je debljina × širina. Označi „Obrađeno“ ako je komad već rendisan.',
+};
+const PHINT = {
+  metal: 'Dužine delova upiši tačno onakve kakve sečeš. Ako ti debljina zida nije bitna, ostavi polje „Zid“ prazno, pa program uzima cev bilo kog zida.',
+  iverica: 'Kod dela koji prati dezen, dužina je mera duž koje ide dezen.',
+  sper: 'Deo se kroji samo iz ploče iste debljine i vrste. Kod dela koji prati žicu, dužina je mera duž koje ide žica.',
+  drvo: 'Upiši gotove mere dela. Ako je deo obrađen, a komad u lageru nije, program sam dodaje meru za rendisanje.',
+};
+
+function defaultSettings() {
+  return {kerfMetal: 3, minMetal: 150, kerfBoard: 4, trim: 0, minBoard: 100,
+          kerfWood: 3, planeAllow: 3, lenAllow: 10, minWood: 200,
+          buyMetal: 6000, buyIvL: 2800, buyIvW: 2070, buySpL: 2500, buySpW: 1250, buyWood: 4000};
+}
+function exampleState() {
+  const pid = uid();
+  return {
+    settings: defaultSettings(),
+    lager: {
+      metal: [
+        {id: uid(), profile: '40x40', wall: 2, len: 3000, qty: 1}, {id: uid(), profile: '40x40', wall: 2, len: 2200, qty: 1},
+        {id: uid(), profile: '40x40', wall: 2, len: 1600, qty: 2}, {id: uid(), profile: '40x40', wall: 1.5, len: 800, qty: 1},
+        {id: uid(), profile: '40x20', wall: 1.5, len: 1100, qty: 1},
+      ],
+      iverica: [
+        {id: uid(), type: '18 hrast', l: 2070, w: 800, grain: 'l', qty: 1},
+        {id: uid(), type: '18 hrast', l: 1250, w: 900, grain: 'w', qty: 1},
+        {id: uid(), type: '18 bela', l: 900, w: 600, grain: 'none', qty: 1},
+        {id: uid(), type: '3 hdf', l: 1000, w: 500, grain: 'none', qty: 1},
+      ],
+      sper: [
+        {id: uid(), t: 12, type: 'breza', l: 1250, w: 600, grain: 'l', qty: 1},
+        {id: uid(), t: 18, type: 'breza', l: 800, w: 500, grain: 'l', qty: 1},
+      ],
+      drvo: [
+        {id: uid(), species: 'bukva', t: 50, w: 80, len: 2000, planed: false, qty: 2},
+        {id: uid(), species: 'smrča', t: 40, w: 60, len: 3000, planed: true, qty: 3},
+        {id: uid(), species: 'hrast', t: 25, w: 150, len: 1800, planed: true, qty: 1},
+      ],
+    },
+    projects: {
+      [pid]: {id: pid, name: 'Radni sto sa fiokama', created: new Date().toISOString(), done: null, parts: {
+        metal: [
+          {id: uid(), name: 'Noga', profile: '40x40', wall: 2, len: 712, qty: 4},
+          {id: uid(), name: 'Uzdužna greda', profile: '40x40', wall: 2, len: 1320, qty: 2},
+          {id: uid(), name: 'Poprečna greda', profile: '40x40', wall: '', len: 620, qty: 4},
+          {id: uid(), name: 'Nosač fioke', profile: '40x20', wall: 1.5, len: 620, qty: 2},
+        ],
+        iverica: [
+          {id: uid(), name: 'Radna ploča', type: '18 hrast', l: 1400, w: 700, grain: true, qty: 1},
+          {id: uid(), name: 'Polica za monitor', type: '18 hrast', l: 1000, w: 250, grain: true, qty: 1},
+          {id: uid(), name: 'Stranica police', type: '18 hrast', l: 250, w: 120, grain: true, qty: 2},
+          {id: uid(), name: 'Čelo fioke', type: '18 hrast', l: 400, w: 150, grain: true, qty: 2},
+          {id: uid(), name: 'Stranica fioke', type: '18 bela', l: 450, w: 130, grain: false, qty: 4},
+          {id: uid(), name: 'Zadnjica fioke', type: '18 bela', l: 328, w: 130, grain: false, qty: 2},
+          {id: uid(), name: 'Dno fioke', type: '3 hdf', l: 440, w: 362, grain: false, qty: 2},
+        ],
+        sper: [
+          {id: uid(), name: 'Kanal za kablove, dno', t: 12, type: 'breza', l: 1200, w: 120, grain: true, qty: 1},
+          {id: uid(), name: 'Kanal za kablove, stranica', t: 12, type: 'breza', l: 1200, w: 80, grain: true, qty: 2},
+        ],
+        drvo: [
+          {id: uid(), name: 'Ručka fioke', species: 'hrast', t: 20, w: 30, len: 300, planed: true, qty: 2},
+        ],
+      }},
+    },
+  };
+}
+function emptyProject(name) {
+  const id = uid();
+  return {id, name, created: new Date().toISOString(), done: null, parts: {metal: [], iverica: [], sper: [], drvo: []}};
+}
+function ensureShape(s) {
+  s.settings = Object.assign(defaultSettings(), s.settings || {});
+  s.lager = s.lager || {};
+  CAT_ORDER.forEach(c => { if (!Array.isArray(s.lager[c])) s.lager[c] = []; });
+  s.projects = s.projects || {};
+  Object.values(s.projects).forEach(p => { p.parts = p.parts || {}; CAT_ORDER.forEach(c => { if (!Array.isArray(p.parts[c])) p.parts[c] = []; }); });
+  const migSper = r => { if (r.t === undefined) { const m = String(r.type || '').match(/^\s*(\d+(?:[.,]\d+)?)\s*(?:mm)?\s*(.*)$/); if (m) { r.t = num(m[1]); r.type = m[2].trim(); } else r.t = ''; } };
+  s.lager.sper.forEach(migSper);
+  Object.values(s.projects).forEach(p => p.parts.sper.forEach(migSper));
+  s.lager.metal.forEach(r => { if (r.wall === undefined) r.wall = ''; });
+  Object.values(s.projects).forEach(p => p.parts.metal.forEach(r => { if (r.wall === undefined) r.wall = ''; }));
+  return s;
+}
+
+/* ================= storage ================= */
+const LKEY = 'radionica-v1';
+let state = null;
+try { const raw = localStorage.getItem(LKEY); if (raw) state = JSON.parse(raw); } catch (e) {}
+state = ensureShape(state || exampleState());
+
+const store = {col: null, pending: new Set(), writing: false, timer: null};
+function setStatus(kind) {
+  const el = document.getElementById('status');
+  const txt = {local: 'Čuvam u ovom pregledaču', saving: 'Čuvam…', cloud: 'Sačuvano na tvom nalogu', err: 'Čuvanje na nalogu nije uspelo, podaci su u ovom pregledaču'}[kind];
+  el.className = 'status ' + (kind === 'cloud' || kind === 'saving' ? 'cloud' : kind === 'err' ? 'err' : '');
+  el.querySelector('span').textContent = txt;
+}
+function saveLocal() { try { localStorage.setItem(LKEY, JSON.stringify(state)); } catch (e) {} }
+function mark(docId) {
+  saveLocal();
+  store.pending.add(docId);
+  if (!store.col) return;
+  clearTimeout(store.timer);
+  store.timer = setTimeout(flush, 700);
+}
+const markLager = () => mark('lager');
+const markProject = id => mark('p_' + id);
+function docData(docId) {
+  if (docId === 'lager') return {settings: state.settings, lager: state.lager};
+  const p = state.projects[docId.slice(2)];
+  return p ? p : null;
+}
+async function flush() {
+  if (!store.col) return;
+  if (store.writing) { store.again = true; return; }
+  store.writing = true; setStatus('saving');
+  let ok = true;
+  try {
+    for (const id of [...store.pending]) {
+      store.pending.delete(id);
+      const data = docData(id);
+      const ref = store.col.doc(id);
+      try {
+        if (data === null) await ref.delete(); else await ref.set(clone(data));
+      } catch (e) {
+        if (e && e.code === 'unavailable') {
+          await new Promise(r => setTimeout(r, 600 + Math.random() * 600));
+          if (data === null) await ref.delete(); else await ref.set(clone(data));
+        } else throw e;
+      }
+    }
+  } catch (e) { ok = false; }
+  store.writing = false;
+  setStatus(ok ? 'cloud' : 'err');
+  if (store.again) { store.again = false; flush(); }
+}
+async function initCloud() {
+  try {
+    if (!window.claude || !window.claude.use) return;
+    const [db, user] = await Promise.all([claude.use('db'), claude.use('user')]);
+    if (!db || !user) return;
+    const id = await user.id();
+    if (!id) return;
+    const col = db.collection('data/users/' + id);
+    const snap = await col.get();
+    if (snap.empty) {
+      store.col = col;
+      store.pending.add('lager');
+      Object.keys(state.projects).forEach(pid => store.pending.add('p_' + pid));
+      await flush();
+    } else {
+      const next = {projects: {}};
+      snap.docs.forEach(d => {
+        const data = clone(d.data() || {});
+        if (d.id === 'lager') { next.settings = data.settings; next.lager = data.lager; }
+        else if (d.id.startsWith('p_') && data.id) next.projects[data.id] = data;
+      });
+      state = ensureShape(next);
+      saveLocal();
+      store.col = col;
+      store.pending.clear();
+      setStatus('cloud');
+      if (ui.open && !state.projects[ui.open]) ui.open = null;
+      render();
+    }
+  } catch (e) { setStatus('local'); }
+}
+
+/* ================= 1D packing ================= */
+function expand(rows, fn) {
+  const out = [];
+  rows.forEach((r, ci) => { const q = Math.floor(num(r.qty)); const o = fn(r, ci); if (!o || !(q > 0)) return; for (let j = 0; j < q; j++) out.push({...o}); });
+  return out;
+}
+function pack1D(items, binsIn, k, compat, mode) {
+  const bins = binsIn.map(b => ({...b, rem: b.L + k, cuts: []}));
+  const sorted = [...items].sort(mode === 2 ? (a, b) => (b.cross || 0) - (a.cross || 0) || b.len - a.len : (a, b) => b.len - a.len);
+  const miss = [];
+  let excess = 0;
+  for (const it of sorted) {
+    const need = it.len + k;
+    let best = null, bs = null, bex = 0;
+    for (const b of bins) {
+      if (b.rem < need - 1e-9) continue;
+      const ex = compat(it, b); if (ex === null) continue;
+      const fresh = b.cuts.length ? 0 : 1;
+      const tail = fresh ? b.L : b.rem - need;
+      const score = mode === 1 ? [ex, b.rem - need] : mode === 2 ? [ex, fresh, tail] : [fresh, ex, tail];
+      if (!best || lexLess(score, bs)) { best = b; bs = score; bex = ex; }
+    }
+    if (best) { best.cuts.push(it); best.rem -= need; excess += bex * it.len; } else miss.push(it);
+  }
+  const used = bins.filter(b => b.cuts.length);
+  return {bins, miss, placed: items.length - miss.length, total: items.length,
+    placedLen: sorted.filter(i => !miss.includes(i)).reduce((a, b) => a + b.len, 0),
+    usedLen: used.reduce((a, b) => a + b.L, 0), excess};
+}
+function best1D(items, bins, k, compat) {
+  let best = null;
+  for (const mode of [0, 1, 2]) {
+    const r = pack1D(items, bins, k, compat, mode);
+    if (!best) { best = r; continue; }
+    const sa = [-r.placedLen, r.excess, r.usedLen], sb = [-best.placedLen, best.excess, best.usedLen];
+    if (lexLess(sa, sb)) best = r;
+  }
+  return best;
+}
+function buyBars(miss, buyL, k, keyFn, labelFn) {
+  const out = [];
+  const groups = new Map();
+  miss.forEach(m => { const key = keyFn(m); if (!groups.has(key)) groups.set(key, []); groups.get(key).push(m); });
+  for (const [key, list] of groups) {
+    const tooLong = list.filter(m => m.len > buyL);
+    const ok = list.filter(m => m.len <= buyL);
+    if (ok.length) {
+      const r = pack1D(ok, ok.map(() => ({L: buyL})), k, () => 0, 0);
+      const n = r.bins.filter(b => b.cuts.length).length;
+      out.push(`${labelFn(list[0])}: ${n} ${plural(n, 'komad', 'komada', 'komada')} po ${fmt(buyL)} mm`);
+    }
+    tooLong.forEach(m => out.push(`${labelFn(m)}: ${esc(m.name)} ${fmt(m.len)} mm je duži od ${fmt(buyL)} mm, kupi po meri`));
+  }
+  return out;
+}
+
+function computeMetal(parts, stock, S) {
+  const k = Math.max(0, num(S.kerfMetal));
+  const wallTxt = w => w > 0 ? `, zid ${fmt(w)} mm` : '';
+  const items = expand(parts, (r, ci) => { const L = num(r.len); return L > 0 ? {name: (r.name || '').trim() || 'Deo', len: L, real: L, ci, key: norm(r.profile), wall: num(r.wall), label: (r.profile || '').trim() || 'bez profila'} : null; });
+  const bins = expand(stock, r => { const L = num(r.len); return L > 0 ? {L, rowId: r.id, key: norm(r.profile), wall: num(r.wall), group: 'Profil ' + ((r.profile || '').trim() || 'bez profila') + wallTxt(num(r.wall))} : null; });
+  const res = best1D(items, bins, k, (it, b) => it.key === b.key && (!(it.wall > 0) || Math.abs(it.wall - b.wall) < 1e-6) ? 0 : null);
+  res.k = k; res.minRest = num(S.minMetal);
+  res.missText = m => `${m.name}, ${fmt(m.real)} mm, profil ${m.label}${wallTxt(m.wall)}`;
+  res.cutNote = () => '';
+  res.buy = buyBars(res.miss, num(S.buyMetal) || 6000, k, m => m.key + '|' + m.wall, m => `Cev ${esc(m.label)}${wallTxt(m.wall)}`);
+  return res;
+}
+function computeWood(parts, stock, S) {
+  const k = Math.max(0, num(S.kerfWood)), allow = Math.max(0, num(S.planeAllow)), lenAllow = Math.max(0, num(S.lenAllow));
+  const items = expand(parts, (r, ci) => {
+    const L = num(r.len), t = num(r.t), w = num(r.w);
+    if (!(L > 0 && t > 0 && w > 0)) return null;
+    return {name: (r.name || '').trim() || 'Deo', len: L + lenAllow, real: L, ci, t, w, a: Math.min(t, w), b: Math.max(t, w), cross: t * w,
+            species: norm(r.species), speciesLabel: (r.species || '').trim(), planed: !!r.planed};
+  });
+  const bins = expand(stock, r => {
+    const L = num(r.len), t = num(r.t), w = num(r.w);
+    if (!(L > 0 && t > 0 && w > 0)) return null;
+    const sp = (r.species || '').trim() || 'drvo';
+    return {L, rowId: r.id, t, w, sa: Math.min(t, w), sb: Math.max(t, w), species: norm(r.species), planed: !!r.planed,
+            group: `${sp} ${fmt(t)}×${fmt(w)}, ${r.planed ? 'obrađeno' : 'neobrađeno'}`};
+  });
+  const compat = (it, b) => {
+    if (it.species && it.species !== b.species) return null;
+    let pa = it.a, pb = it.b;
+    if (it.planed && !b.planed) { pa += 2 * allow; pb += 2 * allow; }
+    return b.sa >= pa - 1e-9 && b.sb >= pb - 1e-9 ? b.sa * b.sb - it.a * it.b : null;
+  };
+  const res = best1D(items, bins, k, compat);
+  res.k = k; res.minRest = num(S.minWood);
+  const woodLabel = m => `${m.speciesLabel || 'Drvo'} ${fmt(m.t)}×${fmt(m.w)}, ${m.planed ? 'obrađeno' : 'neobrađeno'}`;
+  res.missText = m => `${m.name}, ${fmt(m.t)}×${fmt(m.w)}×${fmt(m.real)} mm, ${(m.speciesLabel || 'bilo koje drvo')}, ${m.planed ? 'obrađeno' : 'neobrađeno'}`;
+  res.cutNote = (c, b) => {
+    const bigger = b.sa > c.a + 1e-9 || b.sb > c.b + 1e-9;
+    if (c.planed && !b.planed) return `rendisati na ${fmt(c.t)}×${fmt(c.w)}`;
+    if (bigger) return `${c.planed ? 'obraditi' : 'iseći'} na ${fmt(c.t)}×${fmt(c.w)}`;
+    return '';
+  };
+  res.buy = buyBars(res.miss, num(S.buyWood) || 4000, k, m => `${m.species}|${m.a}|${m.b}|${m.planed}`, woodLabel);
+  return res;
+}
+
+/* ================= 2D packing (guillotine) ================= */
+function orients(it, sh) {
+  if (it.l === it.w) return [false];
+  if (!it.grain || sh.grain === 'none') return [false, true];
+  return [sh.grain === 'w'];
+}
+function pack2D(items, sheets, k, trim, sortFn, split, choose) {
+  const S = sheets.map(s => {
+    const uw = s.L - 2 * trim + k, uh = s.W - 2 * trim + k;
+    return {...s, free: uw > k && uh > k ? [{x: 0, y: 0, w: uw, h: uh}] : [], placed: []};
+  });
+  const its = [...items].sort(sortFn);
+  const miss = [];
+  for (const it of its) {
+    const pw = it.l + k, ph = it.w + k;
+    let best = null;
+    const trySheet = sh => {
+      const opts = orients(it, sh);
+      sh.free.forEach((f, fi) => {
+        for (const rot of opts) {
+          const w = rot ? ph : pw, h = rot ? pw : ph;
+          if (w <= f.w + 1e-9 && h <= f.h + 1e-9) {
+            const area = f.w * f.h - w * h, side = Math.min(f.w - w, f.h - h);
+            const s1 = choose === 'baf' ? area : side, s2 = choose === 'baf' ? side : area;
+            if (!best || s1 < best.s1 - 1e-9 || (Math.abs(s1 - best.s1) < 1e-9 && s2 < best.s2)) best = {sh, fi, w, h, rot, s1, s2};
+          }
+        }
+      });
+    };
+    S.filter(s => s.placed.length).forEach(trySheet);
+    if (!best) for (const s of S.filter(s => !s.placed.length).sort((a, b) => a.L * a.W - b.L * b.W)) { trySheet(s); if (best) break; }
+    if (!best) { miss.push(it); continue; }
+    const {sh, fi, w, h, rot} = best;
+    const f = sh.free[fi];
+    sh.free.splice(fi, 1);
+    sh.placed.push({x: f.x, y: f.y, w: w - k, h: h - k, rot, it});
+    const rw = f.w - w, rh = f.h - h;
+    const add = r => { if (r.w > k + 1e-9 && r.h > k + 1e-9) sh.free.push(r); };
+    const horiz = split === 'short' ? rw < rh : rw >= rh;
+    if (horiz) { add({x: f.x, y: f.y + h, w: f.w, h: rh}); add({x: f.x + w, y: f.y, w: rw, h}); }
+    else { add({x: f.x + w, y: f.y, w: rw, h: f.h}); add({x: f.x, y: f.y + h, w, h: rh}); }
+  }
+  const used = S.filter(s => s.placed.length);
+  let bigOff = 0;
+  used.forEach(s => s.free.forEach(f => { bigOff = Math.max(bigOff, (f.w - k) * (f.h - k)); }));
+  return {S, miss, placed: items.length - miss.length,
+    placedArea: its.filter(i => !miss.includes(i)).reduce((a, b) => a + b.l * b.w, 0),
+    usedArea: used.reduce((a, s) => a + s.L * s.W, 0), bigOff};
+}
+const SORTS = [
+  (a, b) => b.l * b.w - a.l * a.w,
+  (a, b) => Math.max(b.l, b.w) - Math.max(a.l, a.w) || b.l * b.w - a.l * a.w,
+  (a, b) => (b.l + b.w) - (a.l + a.w),
+  (a, b) => b.l - a.l || b.w - a.w,
+  (a, b) => b.w - a.w || b.l - a.l,
+  (a, b) => (b.grain ? 1 : 0) - (a.grain ? 1 : 0) || b.l * b.w - a.l * a.w,
+];
+function best2D(items, sheets, k, trim) {
+  let best = null;
+  for (const sf of SORTS) for (const split of ['short', 'long']) for (const choose of ['baf', 'bssf']) {
+    const r = pack2D(items, sheets, k, trim, sf, split, choose);
+    if (!best) { best = r; continue; }
+    const sa = [-r.placedArea, -r.placed, r.usedArea, -r.bigOff], sb = [-best.placedArea, -best.placed, best.usedArea, -best.bigOff];
+    if (lexLess(sa, sb)) best = r;
+  }
+  return best;
+}
+function computeSheets(parts, stock, S, cat) {
+  const k = Math.max(0, num(S.kerfBoard)), trim = Math.max(0, num(S.trim)), minOff = num(S.minBoard);
+  const buyL = num(cat === 'iverica' ? S.buyIvL : S.buySpL) || 2800, buyW = num(cat === 'iverica' ? S.buyIvW : S.buySpW) || 2070;
+  const groups = new Map();
+  const keyOf = r => cat === 'sper' ? num(r.t) + '|' + norm(r.type) : norm(r.type);
+  const labelOf = r => cat === 'sper' ? `${num(r.t) > 0 ? fmt(num(r.t)) + ' mm' : 'bez debljine'}${String(r.type || '').trim() ? ' ' + String(r.type).trim() : ''}` : (String(r.type || '').trim() || 'bez oznake');
+  const g = r => { const key = keyOf(r); if (!groups.has(key)) groups.set(key, {label: labelOf(r), items: [], sheets: []}); return groups.get(key); };
+  parts.forEach((r, ci) => {
+    const l = num(r.l), w = num(r.w), q = Math.floor(num(r.qty));
+    if (l > 0 && w > 0 && q > 0) for (let j = 0; j < q; j++) g(r).items.push({name: (r.name || '').trim() || 'Deo', l, w, grain: !!r.grain, ci});
+  });
+  stock.forEach(r => {
+    const l = num(r.l), w = num(r.w), q = Math.floor(num(r.qty));
+    if (l > 0 && w > 0 && q > 0) for (let j = 0; j < q; j++) g(r).sheets.push({L: l, W: w, grain: r.grain || 'none', rowId: r.id});
+  });
+  const out = {groups: [], miss: [], placed: 0, total: 0, buy: [], k, trim, minOff, kind: cat};
+  const word = cat === 'iverica' ? 'Iverica' : 'Šperploča';
+  for (const grp of groups.values()) {
+    if (!grp.items.length) continue;
+    out.total += grp.items.length;
+    const res = best2D(grp.items, grp.sheets, k, trim);
+    res.S.forEach(sh => { sh.offs = sh.placed.length ? sh.free.map(f => ({x: f.x, y: f.y, w: f.w - k, h: f.h - k})).filter(o => o.w >= minOff && o.h >= minOff).sort((a, b) => b.w * b.h - a.w * a.h) : []; });
+    out.placed += res.placed;
+    res.miss.forEach(m => out.miss.push({...m, label: grp.label}));
+    out.groups.push({label: grp.label, res, noStock: !grp.sheets.length});
+    if (res.miss.length) {
+      const newSheets = res.miss.map(() => ({L: buyL, W: buyW, grain: 'l'}));
+      const r2 = best2D(res.miss, newSheets, k, trim);
+      const used = r2.S.filter(s => s.placed.length);
+      if (used.length) {
+        const pct = Math.round(r2.placedArea / used.reduce((a, s) => a + s.L * s.W, 0) * 100);
+        out.buy.push(`${word} ${esc(grp.label)}: ${used.length} ${plural(used.length, 'ploča', 'ploče', 'ploča')} ${fmt(buyL)} × ${fmt(buyW)} mm (iskoristi se oko ${pct}%, pa pitaj i za krojenje ili manji komad)`);
+      }
+      r2.miss.forEach(m => out.buy.push(`${word} ${esc(grp.label)}: ${esc(m.name)} ${fmt(m.l)} × ${fmt(m.w)} mm je veći od standardne ploče, kupi po meri`));
+    }
+  }
+  out.missText = m => `${m.name}, ${fmt(m.l)} × ${fmt(m.w)} mm, ${m.label}`;
+  return out;
+}
+
+function computeProject(p) {
+  const S = state.settings, L = state.lager, P = p.parts;
+  const cats = {
+    metal: computeMetal(P.metal, L.metal, S),
+    iverica: computeSheets(P.iverica, L.iverica, S, 'iverica'),
+    sper: computeSheets(P.sper, L.sper, S, 'sper'),
+    drvo: computeWood(P.drvo, L.drvo, S),
+  };
+  let placed = 0, total = 0; const buy = [];
+  CAT_ORDER.forEach(c => { placed += cats[c].placed; total += cats[c].total; cats[c].buy.forEach(b => buy.push(b)); });
+  return {cats, placed, total, buy};
+}
+
+/* ================= apply project to lager ================= */
+function addRow(arr, row, keys) {
+  const hit = arr.find(r => keys.every(k => typeof row[k] === 'number' ? num(r[k]) === row[k] : norm(r[k]) === norm(row[k])));
+  if (hit) hit.qty = num(hit.qty) + 1; else arr.push({id: uid(), ...row, qty: 1});
+}
+function takeRow(arr, rowId) {
+  const i = arr.findIndex(r => r.id === rowId); if (i < 0) return null;
+  const row = {...arr[i]};
+  arr[i].qty = num(arr[i].qty) - 1;
+  if (arr[i].qty <= 0) arr.splice(i, 1);
+  return row;
+}
+function finishProject(p) {
+  const R = computeProject(p);
+  const before = clone(state.lager);
+  const L = state.lager;
+  const m = R.cats.metal;
+  m.bins.filter(b => b.cuts.length).forEach(b => {
+    const row = takeRow(L.metal, b.rowId); if (!row) return;
+    const rest = Math.floor(b.rem - m.k);
+    if (rest >= m.minRest && rest > 0) addRow(L.metal, {profile: row.profile, wall: row.wall ?? '', len: rest}, ['profile', 'wall', 'len']);
+  });
+  const d = R.cats.drvo;
+  d.bins.filter(b => b.cuts.length).forEach(b => {
+    const row = takeRow(L.drvo, b.rowId); if (!row) return;
+    const rest = Math.floor(b.rem - d.k);
+    if (rest >= d.minRest && rest > 0) addRow(L.drvo, {species: row.species, t: num(row.t), w: num(row.w), len: rest, planed: !!row.planed}, ['species', 't', 'w', 'len', 'planed']);
+  });
+  ['iverica', 'sper'].forEach(cat => {
+    R.cats[cat].groups.forEach(g => g.res.S.filter(s => s.placed.length).forEach(sh => {
+      const row = takeRow(L[cat], sh.rowId); if (!row) return;
+      sh.offs.forEach(o => addRow(L[cat], cat === 'sper' ? {t: row.t, type: row.type, l: Math.floor(o.w), w: Math.floor(o.h), grain: row.grain} : {type: row.type, l: Math.floor(o.w), w: Math.floor(o.h), grain: row.grain}, cat === 'sper' ? ['t', 'type', 'l', 'w', 'grain'] : ['type', 'l', 'w', 'grain']));
+    }));
+  });
+  p.done = {date: new Date().toISOString(), lagerBefore: before, placed: R.placed, total: R.total};
+  markLager(); markProject(p.id);
+}
+function undoProject(p) {
+  if (!p.done) return;
+  state.lager = ensureShape({lager: p.done.lagerBefore}).lager;
+  p.done = null;
+  markLager(); markProject(p.id);
+}
+
+/* ================= UI ================= */
+const ui = {view: 'projects', lagerTab: 'metal', open: null, projTab: 'pregled'};
+const app = document.getElementById('app');
+
+function tableHTML(rows, cols, ro) {
+  let h = '<table><thead><tr>' + cols.map(c => `<th>${c.l}</th>`).join('') + (ro ? '' : '<th><span style="position:absolute;left:-9999px">Obriši</span></th>') + '</tr></thead><tbody>';
+  if (!rows.length) h += `<tr><td class="emptyrow" colspan="${cols.length + 1}">${ro ? 'Nema unosa.' : 'Još nema unosa. Dodaj prvi red dugmetom ispod.'}</td></tr>`;
+  for (const r of rows) {
+    h += `<tr data-id="${r.id}">` + cols.map(c => {
+      const dis = ro ? ' disabled' : '';
+      if (c.t === 'chk') return `<td class="c"><input type="checkbox" data-k="${c.k}" ${r[c.k] ? 'checked' : ''} aria-label="${c.l}"${dis}></td>`;
+      if (c.t === 'sel') return `<td><select data-k="${c.k}" aria-label="${c.l}"${dis}>${c.opts.map(([v, t]) => `<option value="${v}" ${(r[c.k] || 'none') === v ? 'selected' : ''}>${t}</option>`).join('')}</select></td>`;
+      const t = c.t === 'num' ? 'type="number" inputmode="decimal" min="0"' : 'type="text"';
+      return `<td><input ${t} data-k="${c.k}" value="${esc(r[c.k])}" placeholder="${c.ph || ''}" aria-label="${c.l}"${dis}></td>`;
+    }).join('') + (ro ? '' : `<td><button class="del" aria-label="Obriši red">×</button></td>`) + `</tr>`;
+  }
+  return h + '</tbody></table>';
+}
+function mountTable(el, getRows, cols, blank, onChange, ro, addLabel) {
+  el.innerHTML = `<div class="tablewrap"></div>${ro ? '' : `<button class="btn add">${addLabel || 'Dodaj red'}</button>`}`;
+  const wrap = el.querySelector('.tablewrap');
+  const draw = () => { wrap.innerHTML = tableHTML(getRows(), cols, ro); };
+  if (!ro) {
+    wrap.addEventListener('input', e => {
+      const tr = e.target.closest('tr[data-id]'); if (!tr) return;
+      const row = getRows().find(r => r.id === tr.dataset.id); if (!row) return;
+      row[e.target.dataset.k] = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+      onChange();
+    });
+    wrap.addEventListener('click', e => {
+      const b = e.target.closest('.del'); if (!b) return;
+      const arr = getRows(); const i = arr.findIndex(r => r.id === b.closest('tr').dataset.id);
+      if (i >= 0) arr.splice(i, 1);
+      draw(); onChange();
+    });
+    el.querySelector('.add').onclick = () => {
+      const arr = getRows(); arr.push(blank(arr)); draw(); onChange();
+      const inputs = [...wrap.querySelectorAll('tbody tr:last-child input[type=text], tbody tr:last-child input[type=number]')];
+      (inputs.find(i => i.value === '') || inputs[0])?.focus();
+    };
+  }
+  draw();
+}
+function blankRow(cols, arr) {
+  const last = arr[arr.length - 1] || {};
+  const r = {id: uid(), qty: 1};
+  cols.forEach(c => {
+    if (c.k === 'qty') return;
+    if (c.t === 'text' && c.k !== 'name') r[c.k] = last[c.k] || '';
+    else if (c.t === 'sel') r[c.k] = last[c.k] || 'l';
+    else if (c.t === 'chk') r[c.k] = c.k === 'grain' ? (last[c.k] ?? true) : (last[c.k] ?? false);
+    else if (c.k === 'wall' || c.k === 't') r[c.k] = last[c.k] ?? '';
+    else r[c.k] = '';
+  });
+  return r;
+}
+function armButton(btn, armedText, fn) {
+  let t = null; const orig = btn.textContent;
+  btn.onclick = () => {
+    if (!t) { btn.textContent = armedText; btn.classList.add('danger'); t = setTimeout(() => { t = null; btn.textContent = orig; btn.classList.remove('danger'); }, 3500); return; }
+    clearTimeout(t); t = null; btn.textContent = orig; btn.classList.remove('danger'); fn();
+  };
+}
+function subtabsHTML(tabs, current) {
+  return `<div class="subtabs" role="tablist">${tabs.map(t => `<button role="tab" data-tab="${t.id}" aria-selected="${t.id === current}">${t.dot ? `<span class="dot ${t.dot}"></span>` : ''}${t.label}${t.badge != null ? `<span class="badge ${t.badgeCls || ''}" data-badge="${t.id}">${t.badge}</span>` : ''}</button>`).join('')}</div>`;
+}
+
+function render() {
+  document.querySelectorAll('nav.main button').forEach(b => b.setAttribute('aria-current', b.dataset.view === ui.view ? 'page' : 'false'));
+  if (ui.view === 'lager') renderLager();
+  else if (ui.view === 'settings') renderSettings();
+  else if (ui.open && state.projects[ui.open]) renderProject(state.projects[ui.open]);
+  else { ui.open = null; renderProjectList(); }
+}
+document.querySelectorAll('nav.main button').forEach(b => b.onclick = () => { ui.view = b.dataset.view; if (b.dataset.view === 'projects') ui.open = null; render(); });
+
+/* ----- lager ----- */
+function lagerSummary(cat) {
+  const rows = state.lager[cat];
+  const pcs = rows.reduce((a, r) => a + Math.max(0, Math.floor(num(r.qty))), 0);
+  if (!pcs) return 'Lager je prazan za ovu vrstu materijala.';
+  if (cat === 'metal' || cat === 'drvo') {
+    const m = rows.reduce((a, r) => a + num(r.len) * Math.max(0, Math.floor(num(r.qty))), 0) / 1000;
+    return `Ukupno ${pcs} ${plural(pcs, 'komad', 'komada', 'komada')}, ${fmt(m)} m.`;
+  }
+  const a = rows.reduce((s, r) => s + num(r.l) * num(r.w) * Math.max(0, Math.floor(num(r.qty))), 0) / 1e6;
+  return `Ukupno ${pcs} ${plural(pcs, 'ploča', 'ploče', 'ploča')}, ${fmt(a)} m².`;
+}
+function renderLager() {
+  const tabs = CAT_ORDER.map(c => ({id: c, label: CATS[c].name, dot: c, badge: state.lager[c].reduce((a, r) => a + Math.max(0, Math.floor(num(r.qty))), 0)}));
+  const c = ui.lagerTab;
+  app.innerHTML = `<h2>Lager</h2><p class="hint">Sav materijal koji imaš u radionici. Uneseš ga jednom, a projekti ga koriste. Kad završiš projekat, iskorišćeno se skida odavde, a upotrebljivi ostaci se vraćaju.</p>
+    ${subtabsHTML(tabs, c)}
+    <div style="max-width:820px"><p class="hint">${LHINT[c]}</p><div id="lt"></div><p class="summary-line" id="lsum">${lagerSummary(c)}</p></div>`;
+  app.querySelectorAll('.subtabs button').forEach(b => b.onclick = () => { ui.lagerTab = b.dataset.tab; renderLager(); });
+  mountTable(app.querySelector('#lt'), () => state.lager[c], LCOLS[c], arr => blankRow(LCOLS[c], arr), () => {
+    markLager();
+    app.querySelector('#lsum').textContent = lagerSummary(c);
+    const bd = app.querySelector(`[data-badge="${c}"]`); if (bd) bd.textContent = state.lager[c].reduce((a, r) => a + Math.max(0, Math.floor(num(r.qty))), 0);
+  }, false, c === 'metal' || c === 'drvo' ? 'Dodaj komad' : 'Dodaj ploču');
+}
+
+/* ----- projects list ----- */
+function renderProjectList() {
+  const list = Object.values(state.projects).sort((a, b) => (b.created || '').localeCompare(a.created || ''));
+  let h = `<div class="list-head"><div><h2>Projekti</h2><p class="hint" style="margin-bottom:0">Za svaki projekat upiši samo delove koji ti trebaju. Program proverava da li imaš materijal u lageru.</p></div><button class="btn solid" id="newProj">Novi projekat</button></div>`;
+  if (!list.length) h += `<div class="empty">Još nemaš nijedan projekat. Klikni „Novi projekat“ i upiši delove za ono što hoćeš da napraviš.</div>`;
+  else {
+    h += `<div class="plist">`;
+    for (const p of list) {
+      const n = CAT_ORDER.reduce((a, c) => a + p.parts[c].reduce((s, r) => s + Math.max(0, Math.floor(num(r.qty))), 0), 0);
+      let cls = '', st = '';
+      if (p.done) { cls = 'done'; st = `Završen ${dateStr(p.done.date)}`; }
+      else if (!n) st = 'Još nema delova';
+      else { const R = computeProject(p); if (R.placed === R.total) { cls = 'ok'; st = `<span class="st ok">Imaš sav materijal</span>`; } else { cls = 'bad'; st = `<span class="st bad">${missFor(R.total - R.placed)}</span>`; } }
+      h += `<button class="pcard ${cls}" data-p="${p.id}"><b>${esc(p.name || 'Bez naziva')}</b><span>${n} ${plural(n, 'deo', 'dela', 'delova')}</span><span>${st}</span></button>`;
+    }
+    h += `</div>`;
+  }
+  app.innerHTML = h;
+  app.querySelector('#newProj').onclick = () => {
+    const p = emptyProject('Novi projekat');
+    state.projects[p.id] = p; markProject(p.id);
+    ui.open = p.id; ui.projTab = 'pregled'; render();
+    const inp = app.querySelector('.pname'); inp.focus(); inp.select();
+  };
+  app.querySelectorAll('.pcard').forEach(b => b.onclick = () => { ui.open = b.dataset.p; ui.projTab = 'pregled'; render(); });
+}
+
+/* ----- project ----- */
+let projTimer = null, lastR = null;
+function badgeFor(res) {
+  if (!res.total) return {badge: null};
+  return {badge: `${res.placed}/${res.total}`, badgeCls: res.placed === res.total ? 'good' : 'bad'};
+}
+function renderProject(p) {
+  const done = !!p.done;
+  lastR = done ? null : computeProject(p);
+  const tabs = [{id: 'pregled', label: 'Pregled'}].concat(CAT_ORDER.map(c => ({id: c, label: CATS[c].name, dot: c, ...(lastR ? badgeFor(lastR.cats[c]) : {badge: null})})));
+  app.innerHTML = `<div class="phead"><button class="linkbtn" id="back">Nazad na projekte</button>
+      <input class="pname" value="${esc(p.name)}" aria-label="Naziv projekta" ${done ? 'disabled' : ''}></div>
+    ${subtabsHTML(tabs, ui.projTab)}<div id="pbody"></div>`;
+  app.querySelector('#back').onclick = () => { ui.open = null; render(); };
+  const nameIn = app.querySelector('.pname');
+  nameIn.oninput = () => { p.name = nameIn.value; markProject(p.id); };
+  app.querySelectorAll('.subtabs button').forEach(b => b.onclick = () => { ui.projTab = b.dataset.tab; renderProject(p); });
+  const body = app.querySelector('#pbody');
+  if (ui.projTab === 'pregled') { body.innerHTML = '<div id="ov"></div>'; renderOverview(p); return; }
+  const c = ui.projTab;
+  body.innerHTML = `<div class="grid2"><div><h3>Delovi koji mi trebaju</h3><p class="hint">${PHINT[c]}</p><div id="pt"></div></div><div id="pr" aria-live="polite"></div></div>`;
+  mountTable(body.querySelector('#pt'), () => p.parts[c], PCOLS[c], arr => blankRow(PCOLS[c], arr), () => {
+    markProject(p.id);
+    clearTimeout(projTimer);
+    projTimer = setTimeout(() => refreshProject(p), 150);
+  }, done, 'Dodaj deo');
+  renderCatResult(p, c);
+}
+function refreshProject(p) {
+  if (ui.open !== p.id || p.done) return;
+  lastR = computeProject(p);
+  CAT_ORDER.forEach(c => {
+    const el = app.querySelector(`[data-badge="${c}"]`);
+    const b = badgeFor(lastR.cats[c]);
+    if (el) { if (b.badge) { el.textContent = b.badge; el.className = 'badge ' + b.badgeCls; } else el.remove(); }
+    else if (b.badge) { const btn = app.querySelector(`.subtabs [data-tab="${c}"]`); if (btn) btn.insertAdjacentHTML('beforeend', `<span class="badge ${b.badgeCls}" data-badge="${c}">${b.badge}</span>`); }
+  });
+  if (ui.projTab !== 'pregled') renderCatResult(p, ui.projTab);
+}
+
+function renderOverview(p) {
+  const el = app.querySelector('#ov');
+  if (p.done) {
+    el.innerHTML = `<div class="done-banner"><p><b>Projekat je završen ${dateStr(p.done.date)}.</b> Iskorišćeni materijal je skinut sa lagera, a ostaci su vraćeni u lager. Raspored se više ne računa, jer materijala više nema u lageru.</p>
+      <div class="actions"><button class="btn" id="copyP">Napravi kopiju projekta</button><button class="btn quiet" id="undoP">Poništi i vrati lager</button><button class="btn quiet" id="delP">Obriši projekat</button></div>
+      <p class="hint" style="margin-top:10px">„Poništi“ vraća lager tačno na stanje pre završetka ovog projekta, pa se gube i izmene lagera napravljene posle toga.</p></div>`;
+    el.querySelector('#copyP').onclick = () => { const q = clone(p); q.id = uid(); q.name = p.name + ' (kopija)'; q.created = new Date().toISOString(); q.done = null; CAT_ORDER.forEach(c => q.parts[c].forEach(r => r.id = uid())); state.projects[q.id] = q; markProject(q.id); ui.open = q.id; ui.projTab = 'pregled'; render(); };
+    armButton(el.querySelector('#undoP'), 'Klikni ponovo da vratiš lager', () => { undoProject(p); render(); });
+    armButton(el.querySelector('#delP'), 'Klikni ponovo da obrišeš', () => { delete state.projects[p.id]; markProject(p.id); ui.open = null; render(); });
+    return;
+  }
+  const R = lastR || computeProject(p);
+  let h = '';
+  if (!R.total) {
+    h += `<p class="verdict">Još nema delova.</p><p class="sub">Izaberi vrstu materijala gore (Metal, Iverica, Šperploča ili Drvo) i upiši delove koji ti trebaju.</p>`;
+  } else if (R.placed === R.total) {
+    h += `<p class="verdict ok">Imaš sav materijal za ovaj projekat.</p><p class="sub">${allCut(R.total)} Raspored sečenja vidiš u svakom odeljku.</p>`;
+  } else {
+    h += `<p class="verdict bad">${missFor(R.total - R.placed)}.</p><p class="sub">Ukupno ${R.total} ${plural(R.total, 'deo', 'dela', 'delova')} u projektu. Ispod je spisak šta treba da kupiš. Računato je po standardnim merama iz podešavanja.</p>`;
+  }
+  if (R.total) {
+    h += `<div class="catstat">` + CAT_ORDER.map(c => {
+      const r = R.cats[c];
+      if (!r.total) return `<div class="row"><b><span class="dot ${c}"></span>${CATS[c].name}</b><span class="n" style="color:var(--muted)">nije potrebno</span><span class="d"></span></div>`;
+      const ok = r.placed === r.total;
+      const miss = groupMiss(r);
+      return `<div class="row"><b><span class="dot ${c}"></span>${CATS[c].name}</b><span class="n" style="color:var(${ok ? '--ok' : '--warn'})">${r.placed} od ${r.total}</span><span class="d">${ok ? 'imaš sve' : 'nedostaje: ' + miss.map(m => `${m.n} × ${esc(m.text)}`).join('; ')}</span></div>`;
+    }).join('') + `</div>`;
+  }
+  if (R.buy.length) {
+    h += `<div class="buy"><h3>Spisak za kupovinu</h3><ul>${R.buy.map(b => `<li>${b}</li>`).join('')}</ul><p class="note">Kad kupiš, dodaj materijal u lager i raspored se sam preračuna.</p></div>`;
+  }
+  h += `<div class="actions"><button class="btn solid" id="finishP" ${R.placed ? '' : 'disabled'}>Završi projekat i skini materijal sa lagera</button><button class="btn quiet" id="delP">Obriši projekat</button></div>`;
+  if (R.placed && R.placed < R.total) h += `<p class="hint" style="margin-top:8px">Pošto nešto fali, sa lagera će se skinuti samo materijal za delove koji mogu da se iseku. Bolje je da prvo dodaš kupljeni materijal u lager.</p>`;
+  el.innerHTML = h;
+  const fb = el.querySelector('#finishP');
+  if (fb && R.placed) armButton(fb, 'Klikni ponovo da potvrdiš', () => { finishProject(p); render(); });
+  armButton(el.querySelector('#delP'), 'Klikni ponovo da obrišeš', () => { delete state.projects[p.id]; markProject(p.id); ui.open = null; render(); });
+}
+function groupMiss(r) {
+  const m = new Map();
+  r.miss.forEach(x => { const t = r.missText(x); const e = m.get(t) || {text: t, n: 0}; e.n++; m.set(t, e); });
+  return [...m.values()];
+}
+function missingBlock(r) {
+  const g = groupMiss(r); if (!g.length) return '';
+  return `<div class="missing"><h4>Nedostaje materijal za ove delove</h4><ul>${g.map(e => `<li>${e.n} × ${esc(e.text)}</li>`).join('')}</ul></div>`;
+}
+
+function renderCatResult(p, c) {
+  const el = app.querySelector('#pr'); if (!el) return;
+  if (p.done) { el.innerHTML = `<div class="empty">Projekat je završen, pa se raspored više ne računa.</div>`; return; }
+  const r = (lastR || computeProject(p)).cats[c];
+  if (!r.total) { el.innerHTML = `<div class="empty">Kad upišeš delove, ovde se pojavljuje raspored sečenja iz lagera.</div>`; return; }
+  let h = r.placed === r.total ? `<p class="rverdict ok">${allCut(r.total)}</p>` : `<p class="rverdict">Iz lagera može da se iseče ${r.placed} od ${r.total}.</p>`;
+  h += missingBlock(r);
+  h += CATS[c].kind === '1d' ? render1D(r, c) : render2D(r);
+  el.innerHTML = h;
+}
+
+function render1D(r, c) {
+  const k = r.k;
+  const used = r.bins.filter(b => b.cuts.length);
+  if (!used.length) return `<p class="unused">Ništa iz lagera ne odgovara ovim delovima.</p>`;
+  const groups = new Map();
+  used.forEach(b => { if (!groups.has(b.group)) groups.set(b.group, []); groups.get(b.group).push(b); });
+  let h = `<p class="hint">Rez ${fmt(k)} mm${c === 'drvo' && num(state.settings.lenAllow) ? `, dodatak na dužinu ${fmt(num(state.settings.lenAllow))} mm po delu` : ''}. Crvena crta je rez.</p>`;
+  for (const [g, bins] of groups) {
+    h += `<h4 class="group-title">${esc(g)}</h4>`;
+    bins.sort((a, b) => b.L - a.L).forEach((b, idx) => {
+      const rest = Math.max(0, b.rem - k);
+      h += `<div class="pipe"><div class="pipe-head"><b>Komad ${idx + 1}: ${fmt(b.L)} mm</b><span>ostaje ${fmt(rest)} mm${rest > 0 ? (rest >= r.minRest ? ', vraća se u lager' : ', otpad') : ''}</span></div><div class="bar" role="img" aria-label="Raspored reza na komadu od ${fmt(b.L)} mm">`;
+      let usedSoFar = 0;
+      b.cuts.forEach((cut, j) => {
+        const pct = cut.len / b.L * 100;
+        usedSoFar += cut.len + k;
+        h += `<div class="seg ${c}" style="flex:0 0 ${pct}%;box-shadow:inset 0 -5px 0 ${partColor(cut.ci)}" title="${esc(cut.name)} ${fmt(cut.real)} mm">${pct > 10 ? esc(cut.name) + ' ' + fmt(cut.real) : pct > 4 ? fmt(cut.real) : ''}</div>`;
+        if (j < b.cuts.length - 1 || b.L - usedSoFar + k > 0.5) h += `<div class="kerf"></div>`;
+      });
+      h += `<div class="rest">${rest / b.L > 0.08 ? fmt(rest) : ''}</div></div>`;
+      const cnt = new Map();
+      b.cuts.forEach(cut => { const note = r.cutNote(cut, b); const key = cut.name + '|' + cut.real + '|' + note; const e = cnt.get(key) || {cut, note, n: 0}; e.n++; cnt.set(key, e); });
+      h += `<ul class="cutlist">` + [...cnt.values()].map(({cut, note, n}) => `<li><b>${n} ×</b> ${esc(cut.name)} ${fmt(cut.real)} mm${note ? ` <span class="x">(${note})</span>` : ''}</li>`).join('') + `</ul></div>`;
+    });
+  }
+  return h;
+}
+
+function render2D(r) {
+  let h = `<p class="hint">Svi rezovi idu od ivice do ivice, pa raspored može da se iseče kružnom ili stonom testerom. Rez ${fmt(r.k)} mm${r.trim ? `, obrub ivica ${fmt(r.trim)} mm` : ''}. Tanke linije pokazuju smer dezena, šrafirana polja su ostaci koji se vraćaju u lager.</p>`;
+  for (const g of r.groups) {
+    h += `<h4 class="group-title">${esc(g.label)}</h4>`;
+    if (g.noStock) { h += `<p class="unused">U lageru nemaš nijednu ploču ove vrste.</p>`; continue; }
+    const used = g.res.S.filter(s => s.placed.length);
+    if (!used.length) h += `<p class="unused">Nijedan deo ne staje na ploče ove vrste iz lagera.</p>`;
+    used.forEach((sh, i) => { h += sheetCard(sh, i + 1, r); });
+  }
+  return h;
+}
+function sheetCard(sh, n, r) {
+  const {k, trim} = r, L = sh.L, W = sh.W;
+  const fs = Math.max(L, W) / 34;
+  let s = `<svg class="sheet" viewBox="0 0 ${L} ${W}" role="img" aria-label="Raspored delova na ploči ${fmt(L)} × ${fmt(W)} mm"><rect class="sh-bg" x="0" y="0" width="${L}" height="${W}"/>`;
+  if (sh.grain === 'l') { const st = W / 16; for (let y = st; y < W; y += st) s += `<line class="grain" x1="0" y1="${y}" x2="${L}" y2="${y}" vector-effect="non-scaling-stroke"/>`; }
+  if (sh.grain === 'w') { const st = L / 22; for (let x = st; x < L; x += st) s += `<line class="grain" x1="${x}" y1="0" x2="${x}" y2="${W}" vector-effect="non-scaling-stroke"/>`; }
+  if (trim > 0) s += `<rect class="sh-trim" x="${trim}" y="${trim}" width="${L - 2 * trim}" height="${W - 2 * trim}" vector-effect="non-scaling-stroke"/>`;
+  sh.offs.forEach(o => {
+    s += `<rect class="off" x="${trim + o.x}" y="${trim + o.y}" width="${o.w}" height="${o.h}" vector-effect="non-scaling-stroke"/>`;
+    const t = `${fmt(o.w)}×${fmt(o.h)}`;
+    if (o.w > fs * t.length * 0.5 && o.h > fs * 1.2) s += `<text class="off-t" x="${trim + o.x + o.w / 2}" y="${trim + o.y + o.h / 2}" font-size="${fs * 0.75}" text-anchor="middle" dominant-baseline="middle">${t}</text>`;
+  });
+  const legend = [];
+  const partArea = sh.placed.reduce((a, p) => a + p.w * p.h, 0);
+  sh.placed.forEach((p, i) => {
+    const x = trim + p.x, y = trim + p.y, no = i + 1;
+    s += `<rect class="pt" x="${x}" y="${y}" width="${p.w}" height="${p.h}" fill="${partColor(p.it.ci)}" vector-effect="non-scaling-stroke"><title>${esc(p.it.name)} ${fmt(p.it.l)} × ${fmt(p.it.w)}</title></rect>`;
+    const cx = x + p.w / 2, cy = y + p.h / 2;
+    const tall = p.h > p.w * 1.4, along = tall ? p.h : p.w, across = tall ? p.w : p.h;
+    const f = Math.min(fs, across / 2.8, along / 3);
+    if (f > fs * 0.35) {
+      const dims = `${fmt(p.w)}×${fmt(p.h)}`;
+      const showDims = along > f * dims.length * 0.55 && across > f * 2.6;
+      s += `<g${tall ? ` transform="rotate(-90 ${cx} ${cy})"` : ''}><text class="pt-n" x="${cx}" y="${showDims ? cy - f * 0.2 : cy}" font-size="${f * 1.15}" text-anchor="middle" dominant-baseline="middle">${no}</text>`;
+      if (showDims) s += `<text class="pt-d" x="${cx}" y="${cy + f * 0.95}" font-size="${f * 0.72}" text-anchor="middle" dominant-baseline="middle">${dims}</text>`;
+      s += `</g>`;
+    }
+    const tag = p.it.grain && sh.grain !== 'none' ? (r.kind === 'sper' ? 'prati žicu' : 'prati dezen') : '';
+    legend.push(`<li><span class="n" style="background:${partColor(p.it.ci)}">${no}</span><span>${esc(p.it.name)} ${fmt(p.it.l)} × ${fmt(p.it.w)}${tag ? ` <span class="r">${tag}</span>` : ''}</span></li>`);
+  });
+  s += `</svg>`;
+  const pct = Math.round(partArea / (L * W) * 100);
+  const gtxt = sh.grain === 'l' ? (r.kind === 'sper' ? 'žica po dužini' : 'dezen po dužini') : sh.grain === 'w' ? (r.kind === 'sper' ? 'žica po širini' : 'dezen po širini') : (r.kind === 'sper' ? 'žica nije bitna' : 'bez dezena');
+  let h = `<div class="sheet-card"><div class="sheet-head"><b>Ploča ${n}: ${fmt(L)} × ${fmt(W)} mm</b><span>${gtxt}, iskorišćeno ${pct}%</span></div>${s}<ol class="legend">${legend.join('')}</ol>`;
+  if (sh.offs.length) h += `<p class="offlist">Ostaci za lager: ${sh.offs.map(o => fmt(o.w) + ' × ' + fmt(o.h)).join(', ')} mm.</p>`;
+  return h + `</div>`;
+}
+
+/* ----- settings ----- */
+const SETS = [
+  {title: 'Metal', f: [['kerfMetal', 'Širina reza testere', 'mm'], ['minMetal', 'Najmanji ostatak koji vraćam u lager', 'mm']]},
+  {title: 'Iverica i šperploča', f: [['kerfBoard', 'Širina reza testere', 'mm'], ['trim', 'Obrub oštećenih ivica', 'mm, sa svake strane'], ['minBoard', 'Najmanji ostatak koji vraćam u lager', 'mm, obe mere']]},
+  {title: 'Drvo', f: [['kerfWood', 'Širina reza testere', 'mm'], ['planeAllow', 'Dodatak za rendisanje', 'mm po strani, za neobrađeno drvo'], ['lenAllow', 'Dodatak na dužinu', 'mm po delu, za poravnanje čela'], ['minWood', 'Najmanji ostatak koji vraćam u lager', 'mm']]},
+  {title: 'Standardne mere za kupovinu', f: [['buyMetal', 'Dužina cevi', 'mm'], ['buyIvL', 'Iverica, dužina ploče', 'mm'], ['buyIvW', 'Iverica, širina ploče', 'mm'], ['buySpL', 'Šperploča, dužina ploče', 'mm'], ['buySpW', 'Šperploča, širina ploče', 'mm'], ['buyWood', 'Dužina drvne građe', 'mm']]},
+];
+function renderSettings() {
+  let h = `<h2>Podešavanja</h2><p class="hint">Ove vrednosti važe za sve projekte.</p><div class="setgrid">`;
+  SETS.forEach(g => {
+    h += `<fieldset><legend>${g.title}</legend>` + g.f.map(([k, l, u]) => `<label class="field"><span>${l}<small>${u}</small></span><input type="number" min="0" step="0.5" data-set="${k}" value="${esc(state.settings[k])}"></label>`).join('') + `</fieldset>`;
+  });
+  h += `<fieldset><legend>Podaci</legend><p class="hint">Podaci se čuvaju na tvom nalogu, pa ih vidiš i sa drugog uređaja kad otvoriš ovu stranicu.</p>
+    <div class="actions"><button class="btn quiet" id="loadEx">Učitaj primer</button><button class="btn quiet" id="wipe">Obriši lager i sve projekte</button></div></fieldset></div>`;
+  app.innerHTML = h;
+  app.querySelectorAll('[data-set]').forEach(inp => inp.oninput = () => { state.settings[inp.dataset.set] = inp.value; markLager(); });
+  const replaceAll = next => {
+    Object.keys(state.projects).forEach(id => { if (!next.projects[id]) { store.pending.add('p_' + id); } });
+    const oldIds = Object.keys(state.projects);
+    state = ensureShape(next);
+    oldIds.forEach(id => markProject(id));
+    Object.keys(state.projects).forEach(id => markProject(id));
+    markLager();
+  };
+  armButton(app.querySelector('#loadEx'), 'Klikni ponovo, ovo menja sve podatke', () => { replaceAll(exampleState()); ui.view = 'projects'; render(); });
+  armButton(app.querySelector('#wipe'), 'Klikni ponovo da obrišeš sve', () => { replaceAll({settings: state.settings, lager: {}, projects: {}}); render(); });
+}
+
+render();
+initCloud();
+</script>
+</body>
+</html>

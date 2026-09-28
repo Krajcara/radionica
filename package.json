@@ -1,0 +1,35 @@
+{
+  "name": "radionica",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Lager materijala, krojne liste i inventar za kućnu radionicu",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=22.16"
+  },
+  "workspaces": [
+    "shared",
+    "server",
+    "web"
+  ],
+  "scripts": {
+    "dev": "concurrently -n server,web -c blue,magenta \"npm run dev -w server\" \"npm run dev -w web\"",
+    "build": "npm run build -w web",
+    "start": "npm start -w server",
+    "test": "NODE_OPTIONS=--disable-warning=ExperimentalWarning vitest run",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^10.0.5",
+    "eslint": "^10.11.0",
+    "eslint-plugin-svelte": "^3.23.0",
+    "globals": "^17.12.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-svelte": "^4.1.1",
+    "vitest": "^5.0.2"
+  }
+}

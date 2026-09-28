@@ -1,0 +1,19 @@
+[Unit]
+Description=Radionica
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/radionica
+EnvironmentFile=/opt/radionica/.env
+ExecStart=/usr/bin/node --disable-warning=ExperimentalWarning /opt/radionica/server/src/index.js
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=radionica
+
+[Install]
+WantedBy=multi-user.target

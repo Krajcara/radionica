@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Komanda za upravljanje Radionicom na serveru: sudo radionica <komanda>
+set -euo pipefail
+
+INSTALL_DIR=/opt/radionica
+SERVICE_NAME=radionica
+
+if [ "$(id -u)" -ne 0 ]; then
+  echo "Pokreni sa sudo: sudo radionica $*"
+  exit 1
+fi
+
+cli() {
+  cd "$INSTALL_DIR"
+  node --disable-warning=ExperimentalWarning server/src/cli.js "$@"
+}
+
+case "${1:-}" in
+  update)
+    bash "$INSTALL_DIR/update.sh"
+    ;;
+  restore)
+    # Baza se vraća dok servis ne radi.
+    systemctl stop "$SERVICE_NAME"
+    set +e
+    cli "$@"
+    code=$?
+    set -e
+    systemctl start "$SERVICE_NAME"
+    exit "$code"
+    ;;
+  status)
+    systemctl status "$SERVICE_NAME" --no-pager
+    ;;
+  logs)
+    journalctl -u "$SERVICE_NAME" -n "${2:-100}" --no-pager
+    ;;
+  restart)
+    systemctl restart "$SERVICE_NAME"
+    echo "Servis je restartovan."
+    ;;
+  *)
+    cli "$@"
+    ;;
+esac
