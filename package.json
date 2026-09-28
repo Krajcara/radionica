@@ -1,6 +1,6 @@
 {
   "name": "radionica",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "private": true,
   "description": "Lager materijala, krojne liste i inventar za kućnu radionicu",
   "license": "MIT",

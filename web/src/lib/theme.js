@@ -1,14 +1,14 @@
 const KEY = 'radionica-tema';
 
-/** @returns {'sistem' | 'svetla' | 'tamna'} */
+/** Podrazumevana je tamna tema; „Sistem“ prati podešavanje uređaja. */
 export function readTheme() {
   try {
     const t = localStorage.getItem(KEY);
-    if (t === 'svetla' || t === 'tamna') return t;
+    if (t === 'svetla' || t === 'tamna' || t === 'sistem') return t;
   } catch {
-    // Pregledač bez pristupa skladištu: prati sistem.
+    // Pregledač bez pristupa skladištu.
   }
-  return 'sistem';
+  return 'tamna';
 }
 
 /** @param {'sistem' | 'svetla' | 'tamna'} theme */
@@ -18,8 +18,7 @@ export function applyTheme(theme) {
   else if (theme === 'tamna') root.dataset.theme = 'dark';
   else delete root.dataset.theme;
   try {
-    if (theme === 'sistem') localStorage.removeItem(KEY);
-    else localStorage.setItem(KEY, theme);
+    localStorage.setItem(KEY, theme);
   } catch {
     // Izbor važi do zatvaranja stranice.
   }

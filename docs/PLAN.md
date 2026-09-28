@@ -16,7 +16,7 @@ Ovaj dokument je izvor istine za odluke. Kad se odluka promeni, menja se i ovde.
 | Baza             | SQLite preko ugrađenog `node:sqlite` (bez prevođenja na serveru), jedan fajl u `/opt/radionica/data/`                                   |
 | Frontend         | Svelte + Vite, gradi se u statičke fajlove koje servira backend                                                                         |
 | Telefon          | responzivan prikaz i PWA (ikonica na početnom ekranu)                                                                                   |
-| Tema             | svetla i tamna; podrazumevano prati sistem, uz ručni izbor                                                                              |
+| Tema             | izgled „Tehnički nacrt“ (IBM Plex fontovi, mreža u pozadini, svetloplavi naglasci); tamna podrazumevana, uz svetlu i „Sistem“           |
 | Jezik interfejsa | srpski, latinica                                                                                                                        |
 | Pokretanje       | kao InfraLoom: git clone u `/opt/radionica`, izgradnja na serveru, systemd servis kao root (zbog ažuriranja iz aplikacije), bez Dockera |
 | Jedinice         | milimetri svuda, osim kant trake i dužina u pregledima (metri)                                                                          |

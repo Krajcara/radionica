@@ -9,7 +9,7 @@ Radni prototip sa proračunom sečenja je u `docs/prototip/radionica.html`. Logi
 ## Pravila
 
 - Interfejs je na srpskom, latinica. Kod, imena promenljivih i komentari mogu biti na engleskom.
-- Svetla i tamna tema; podrazumevano prati sistem.
+- Izgled „Tehnički nacrt“: boje i uglovi samo preko promenljivih u `web/src/app.css`; tamna tema je podrazumevana.
 - Repozitorijum je javan: nikad lozinke, tokeni, lični podaci ni pravi podaci iz radionice u repou.
 - Instalacija i ažuriranje rade kao u InfraLoom-u: `install.sh`, `update.sh` i `radionica.service` u korenu repoa; servis radi kao root.
 - Nova verzija = izmene na `main` i povećan broj verzije u svim `package.json` fajlovima.

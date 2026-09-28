@@ -1,47 +1,63 @@
 :root {
-  --bg: #e7eae8;
-  --surface: #f7f8f6;
-  --surface2: #eef1ef;
-  --ink: #1e2226;
-  --muted: #5c676d;
-  --line: #c6cdca;
-  --steel: #3d5a6c;
-  --warn: #a63f2b;
-  --warn-soft: #f3ddd6;
-  --ok: #3e6b4a;
-  --ok-soft: #dce9df;
-  --body: 'Barlow', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --cond: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  /* Izgled „Tehnički nacrt“: svetla varijanta */
+  --bg: #eef3f8;
+  --surface: #ffffff;
+  --surface2: #e4ecf4;
+  --ink: #0e2236;
+  --muted: #4d6680;
+  --line: #c3d2e1;
+  --grid: rgba(14, 34, 54, 0.05);
+  --steel: #0a6fa8;
+  --acc: #0a6fa8;
+  --acc-ink: #ffffff;
+  --warn: #b4432a;
+  --warn-soft: #f8e1da;
+  --ok: #1e7a4c;
+  --ok-soft: #ddf0e5;
+  --sheet: #efe3cc;
+  --radius: 2px;
+  --body: 'IBM Plex Sans', 'Segoe UI', Helvetica, Arial, sans-serif;
+  --cond: 'IBM Plex Sans Condensed', 'Arial Narrow', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'DejaVu Sans Mono', monospace;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --bg: #15181a;
-    --surface: #1e2326;
-    --surface2: #262c2f;
-    --ink: #e4e8e6;
-    --muted: #98a4a9;
-    --line: #353d41;
-    --steel: #86a8be;
-    --warn: #e6806a;
-    --warn-soft: #3b2420;
-    --ok: #8bc49a;
-    --ok-soft: #1f3226;
+    --bg: #0b1623;
+    --surface: #102033;
+    --surface2: #16293f;
+    --ink: #e3eef8;
+    --muted: #8fa8c0;
+    --line: #24405e;
+    --grid: rgba(111, 211, 255, 0.045);
+    --steel: #6fd3ff;
+    --acc: #6fd3ff;
+    --acc-ink: #06202e;
+    --warn: #ff9e7a;
+    --warn-soft: #33201c;
+    --ok: #8be3b0;
+    --ok-soft: #12302a;
+    --sheet: #1a2e44;
     color-scheme: dark;
   }
 }
 :root[data-theme='dark'] {
-  --bg: #15181a;
-  --surface: #1e2326;
-  --surface2: #262c2f;
-  --ink: #e4e8e6;
-  --muted: #98a4a9;
-  --line: #353d41;
-  --steel: #86a8be;
-  --warn: #e6806a;
-  --warn-soft: #3b2420;
-  --ok: #8bc49a;
-  --ok-soft: #1f3226;
+  /* Izgled „Tehnički nacrt“: tamna varijanta */
+  --bg: #0b1623;
+  --surface: #102033;
+  --surface2: #16293f;
+  --ink: #e3eef8;
+  --muted: #8fa8c0;
+  --line: #24405e;
+  --grid: rgba(111, 211, 255, 0.045);
+  --steel: #6fd3ff;
+  --acc: #6fd3ff;
+  --acc-ink: #06202e;
+  --warn: #ff9e7a;
+  --warn-soft: #33201c;
+  --ok: #8be3b0;
+  --ok-soft: #12302a;
+  --sheet: #1a2e44;
   color-scheme: dark;
 }
 *,
@@ -55,7 +71,11 @@ html {
 }
 body {
   margin: 0;
-  background: var(--bg);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 24px 24px;
   color: var(--ink);
   font-family: var(--body);
   font-size: 16px;
@@ -101,30 +121,33 @@ main.wrap {
 .brand {
   font-family: var(--cond);
   font-weight: 700;
+  letter-spacing: -0.01em;
   font-size: clamp(32px, 5vw, 50px);
   line-height: 1;
   margin: 0;
 }
 header nav {
   display: flex;
-  gap: 4px;
-  margin-top: 20px;
-  border-bottom: 2px solid var(--ink);
+  gap: 28px;
+  margin-top: 18px;
+  border-bottom: 1px solid var(--line);
   overflow-x: auto;
 }
 header nav a {
-  padding: 9px 18px 8px;
-  font-family: var(--cond);
-  font-weight: 600;
-  font-size: 22px;
+  padding: 10px 0;
+  font-family: var(--mono);
+  font-size: 14px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--muted);
   text-decoration: none;
-  border-radius: 6px 6px 0 0;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
   white-space: nowrap;
 }
 header nav a[aria-current='page'] {
-  background: var(--ink);
-  color: var(--bg);
+  color: var(--acc);
+  border-bottom-color: var(--acc);
 }
 h2 {
   font-family: var(--cond);
@@ -169,7 +192,7 @@ h3 {
 .card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 18px 20px;
   display: flex;
   flex-direction: column;
@@ -194,7 +217,7 @@ h3 {
 .empty {
   background: var(--surface);
   border: 1px dashed var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 22px;
   max-width: 720px;
 }
@@ -216,20 +239,20 @@ p {
   color: var(--warn);
   background: var(--warn-soft);
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 .ok {
   color: var(--ok);
   background: var(--ok-soft);
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: var(--radius);
 }
 code {
-  font-family: ui-monospace, 'DejaVu Sans Mono', monospace;
+  font-family: var(--mono);
   font-size: 0.92em;
   background: var(--surface2);
   padding: 1px 5px;
-  border-radius: 4px;
+  border-radius: var(--radius);
 }
 code.big {
   font-size: 1.15em;
@@ -239,7 +262,7 @@ code.big {
 .notice {
   background: var(--surface2);
   border: 1px solid var(--steel);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
@@ -259,7 +282,7 @@ code.big {
 .field select,
 td select {
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--bg);
   padding: 9px 11px;
   font-size: 16px;
@@ -308,7 +331,7 @@ td select {
   background: transparent;
   padding: 8px 14px;
   min-height: 40px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-weight: 500;
   text-decoration: none;
@@ -320,8 +343,10 @@ td select {
   color: var(--bg);
 }
 .btn.solid {
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--acc);
+  border-color: var(--acc);
+  color: var(--acc-ink);
+  font-weight: 600;
 }
 .btn.solid:hover {
   opacity: 0.88;
@@ -362,7 +387,7 @@ td select {
 .seg {
   display: flex;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--surface);
   padding: 2px;
 }
@@ -370,21 +395,22 @@ td select {
   border: 0;
   background: none;
   padding: 5px 12px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   cursor: pointer;
   font-size: 14px;
   min-height: 32px;
+  color: var(--muted);
 }
 .seg button[aria-pressed='true'] {
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--acc);
+  color: var(--acc-ink);
 }
 
 /* ---------- tabele ---------- */
 .tablewrap {
   overflow-x: auto;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--bg);
 }
 table {
@@ -422,12 +448,17 @@ td .actions {
 }
 .num {
   text-align: right;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--mono);
+  font-size: 0.95em;
+}
+th.num {
+  font-family: var(--body);
+  font-size: 13px;
 }
 .tag {
   font-size: 13px;
   padding: 2px 8px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--surface2);
   white-space: nowrap;
 }
@@ -460,7 +491,7 @@ td .actions {
   border: 1px solid var(--line);
   background: var(--surface);
   padding: 6px 14px;
-  border-radius: 20px;
+  border-radius: var(--radius);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -469,9 +500,9 @@ td .actions {
   min-height: 36px;
 }
 .subtabs button[aria-selected='true'] {
-  background: var(--ink);
-  color: var(--bg);
-  border-color: var(--ink);
+  background: var(--surface2);
+  color: var(--ink);
+  border-color: var(--acc);
 }
 .dot {
   width: 12px;
@@ -497,13 +528,12 @@ td .actions {
   font-size: 12px;
   font-weight: 600;
   padding: 0 7px;
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--surface2);
   color: var(--ink);
 }
 .subtabs button[aria-selected='true'] .badge {
   background: var(--bg);
-  color: var(--ink);
 }
 .badge.bad {
   background: var(--warn-soft);
@@ -546,7 +576,7 @@ td .actions {
   border: 1px solid transparent;
   background: transparent;
   padding: 6px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   font-size: 15px;
   min-height: 34px;
   color: var(--ink);
@@ -570,7 +600,8 @@ td .actions {
 }
 .tablewrap.edit td input[type='number'] {
   text-align: right;
-  font-variant-numeric: tabular-nums;
+  font-family: var(--mono);
+  font-size: 14px;
 }
 .tablewrap.edit td input:disabled,
 .tablewrap.edit td select:disabled {
@@ -596,7 +627,7 @@ td.emptyrow {
   line-height: 1;
   padding: 4px 8px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: var(--radius);
 }
 .del:hover {
   color: var(--warn);
@@ -622,7 +653,7 @@ td.emptyrow {
   background: var(--surface);
   border: 1px solid var(--line);
   border-top: 4px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 14px 16px;
   display: flex;
   flex-direction: column;
@@ -670,7 +701,7 @@ td.emptyrow {
   background: transparent;
   padding: 2px 6px;
   margin-left: -7px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   width: 100%;
   max-width: 780px;
   color: var(--ink);
@@ -710,7 +741,7 @@ td.emptyrow {
 .catstat {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   margin-bottom: 18px;
   max-width: 980px;
 }
@@ -742,7 +773,7 @@ td.emptyrow {
 .buy,
 .missing {
   background: var(--warn-soft);
-  border-radius: 8px;
+  border-radius: var(--radius);
   padding: 14px 18px;
   margin-bottom: 18px;
   max-width: 980px;
@@ -835,7 +866,7 @@ td.emptyrow {
 .sheet-card {
   background: var(--surface);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 14px;
   margin: 0 0 18px;
 }
@@ -857,15 +888,7 @@ svg.sheet {
   max-height: 70vh;
 }
 .sh-bg {
-  fill: #ebddc3;
-}
-:root[data-theme='dark'] .sh-bg {
-  fill: #3a3226;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme='light']) .sh-bg {
-    fill: #3a3226;
-  }
+  fill: var(--sheet);
 }
 .sh-trim {
   fill: none;
@@ -938,7 +961,7 @@ svg.sheet {
 }
 fieldset {
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   padding: 8px 14px 12px;
   margin: 0;
 }
@@ -964,7 +987,7 @@ legend {
 .setfield input {
   width: 92px;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: var(--radius);
   padding: 6px 8px;
   background: var(--bg);
   text-align: right;
@@ -989,7 +1012,7 @@ textarea {
   font: inherit;
   color: var(--ink);
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--bg);
   padding: 9px 11px;
   font-size: 16px;
@@ -1015,15 +1038,15 @@ textarea {
   border: 1px solid var(--line);
   background: var(--surface);
   padding: 6px 12px;
-  border-radius: 16px;
+  border-radius: var(--radius);
   font-size: 14px;
   cursor: pointer;
   min-height: 34px;
 }
 .chips button.on {
-  background: var(--ink);
-  color: var(--bg);
-  border-color: var(--ink);
+  background: var(--surface2);
+  color: var(--ink);
+  border-color: var(--acc);
 }
 .invgrid {
   display: grid;
@@ -1060,7 +1083,7 @@ textarea {
   justify-content: space-between;
   gap: 8px;
   padding: 6px 8px;
-  border-radius: 4px;
+  border-radius: var(--radius);
   text-decoration: none;
   color: var(--ink);
   font-size: 15px;
@@ -1069,12 +1092,12 @@ textarea {
   background: var(--surface2);
 }
 .tnode a.sel {
-  background: var(--ink);
-  color: var(--bg);
+  background: var(--surface2);
+  color: var(--acc);
+  box-shadow: inset 2px 0 0 var(--acc);
 }
 .tnode a.sel .muted {
-  color: var(--bg);
-  opacity: 0.7;
+  color: var(--acc);
 }
 .tgl {
   width: 24px;
@@ -1119,7 +1142,7 @@ textarea {
   position: relative;
   width: 110px;
   height: 110px;
-  border-radius: 6px;
+  border-radius: var(--radius);
   overflow: hidden;
   background: var(--surface2);
   border: 1px solid var(--line);
@@ -1159,7 +1182,7 @@ textarea {
   gap: 3px;
   padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--surface);
   text-decoration: none;
   color: var(--ink);
@@ -1173,7 +1196,7 @@ textarea {
   width: 100%;
   height: 90px;
   object-fit: cover;
-  border-radius: 4px;
+  border-radius: var(--radius);
   margin-bottom: 4px;
 }
 .addloc {
@@ -1206,7 +1229,7 @@ textarea {
   gap: 2px 12px;
   padding: 10px 12px;
   border: 1px solid var(--line);
-  border-radius: 6px;
+  border-radius: var(--radius);
   background: var(--surface);
   text-decoration: none;
   color: var(--ink);
@@ -1252,13 +1275,13 @@ textarea {
   gap: 6px;
   padding: 4px 4px 4px 12px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: var(--radius);
   background: var(--surface);
   font-size: 15px;
 }
 dialog.editor {
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: var(--radius);
   background: var(--surface);
   color: var(--ink);
   padding: 20px;
