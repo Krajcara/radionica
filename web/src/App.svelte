@@ -5,6 +5,10 @@
   import Login from './components/Login.svelte';
   import ChangePassword from './components/ChangePassword.svelte';
   import Settings from './components/Settings.svelte';
+  import MaterialsPage from './components/MaterialsPage.svelte';
+  import StockPage from './components/StockPage.svelte';
+  import ProjectsPage from './components/ProjectsPage.svelte';
+  import { loadAll, saving, store } from './lib/data.svelte.js';
 
   const pages = [
     {
@@ -30,6 +34,7 @@
   ];
 
   let current = $state(pageFromHash());
+  let sub = $state(subFromHash());
   let theme = $state(readTheme());
   let version = $state(null);
   let user = $state(null);
@@ -40,9 +45,18 @@
   const page = $derived(pages.find((p) => p.id === current) ?? pages[0]);
 
   function pageFromHash() {
-    const id = location.hash.replace('#/', '');
+    const id = location.hash.replace('#/', '').split('/')[0];
     return pages.some((p) => p.id === id) ? id : 'projekti';
   }
+  function subFromHash() {
+    const s = location.hash.replace('#/', '').split('/')[1];
+    return s && /^\d+$/.test(s) ? Number(s) : null;
+  }
+  const canWrite = $derived(user && user.role !== 'gost');
+
+  $effect(() => {
+    if (user && !user.mustChangePassword && !store.loaded) loadAll();
+  });
 
   function setTheme(id) {
     theme = id;
@@ -60,12 +74,16 @@
 
   function restored() {
     user = null;
+    store.loaded = false;
     notice = 'Podaci su vraćeni iz rezervne kopije. Prijavi se ponovo.';
   }
 
   onMount(() => {
     setUnauthorizedHandler(() => (user = null));
-    const onHash = () => (current = pageFromHash());
+    const onHash = () => {
+      current = pageFromHash();
+      sub = subFromHash();
+    };
     window.addEventListener('hashchange', onHash);
     get('/api/health')
       .then((h) => (version = h.version))
@@ -107,6 +125,9 @@
     <div class="titlebar">
       <h1 class="brand">Radionica</h1>
       <div class="side">
+        <span class="muted small savestate" class:err={saving.error}
+          >{saving.pending ? 'Čuvam…' : saving.error ? `Nije sačuvano: ${saving.error}` : ''}</span
+        >
         <span class="muted small">{user.displayName || user.username}</span>
         <button type="button" class="linkbtn" onclick={logout}>Odjavi se</button>
         {@render themeSwitch()}
@@ -120,8 +141,19 @@
   </header>
 
   <main class="wrap">
+    {#if store.error}
+      <p class="error" role="alert">Podaci nisu učitani: {store.error}</p>
+    {/if}
     {#if current === 'podesavanja'}
       <Settings me={user} {version} onRestored={restored} />
+    {:else if !store.loaded}
+      <p class="muted">Učitavam…</p>
+    {:else if current === 'projekti'}
+      <ProjectsPage {sub} {canWrite} />
+    {:else if current === 'materijal'}
+      <StockPage {canWrite} />
+    {:else if current === 'sifarnik'}
+      <MaterialsPage {canWrite} />
     {:else}
       <h2>{page.label}</h2>
       <div class="empty">

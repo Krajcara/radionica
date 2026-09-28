@@ -14,6 +14,7 @@ import {
 import { readVersion } from './config.js';
 import { getSetting, openDatabase, setSetting } from './db.js';
 import { checkForUpdate, readProgress, startUpdate } from './update.js';
+import { registerWorkshopRoutes } from './workshop.js';
 import {
   ROLES,
   UserError,
@@ -109,6 +110,13 @@ export function buildApp({ ctx, webDir, secureCookies = false, logger = false })
   const requireAdmin = async (request, reply) => {
     if (request.user?.role !== 'admin') return reply.code(403).send({ error: 'Samo admin može ovo.' });
   };
+  const requireWrite = async (request, reply) => {
+    if (!['admin', 'korisnik'].includes(request.user?.role)) {
+      return reply.code(403).send({ error: 'Gost može samo da gleda.' });
+    }
+  };
+
+  const workshop = registerWorkshopRoutes(app, ctx, { requireWrite });
 
   /* ---------- javno ---------- */
 
@@ -333,6 +341,7 @@ export function buildApp({ ctx, webDir, secureCookies = false, logger = false })
           .all()
           .map((r) => [r.key, JSON.parse(r.value)]),
       ),
+      ...workshop.exportData(),
     };
     const day = data.exportedAt.slice(0, 10);
     reply.header('Content-Disposition', `attachment; filename="radionica-izvoz-${day}.json"`);

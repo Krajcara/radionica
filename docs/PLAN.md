@@ -107,7 +107,7 @@ Svaka faza se završava izdanjem koje se instalira na server i proba na pravom p
 
 **Faza 2: instalacija i ažuriranje po uzoru na InfraLoom (gotovo, v0.3.0).** Instalacija iz git repozitorijuma, ažuriranje iz aplikacije sa prikazom izmena i napretka, rezervna kopija pre ažuriranja, vraćanje prethodne verzije i baze ako nova ne proradi.
 
-**Faza 3: materijal i projekti.** Šifarnik, lager, projekti, raspored sečenja i spisak za kupovinu, kao u prototipu, uz izbor sa liste umesto kucanja. Uvoz podataka iz prototipa.
+**Faza 3: materijal i projekti (gotovo, v0.4.0).** Šifarnik materijala (metal sa zidom, iverica sa dezenom, šperploča sa debljinom, vrste drveta), lager sa izborom materijala sa liste, projekti sa rasporedom sečenja, spisak za kupovinu, završetak projekta sa skidanjem sa lagera i poništavanjem, kopija projekta, podešavanja krojenja. Proračun je u `shared/src/krojenje.js`. Uvoz iz prototipa je izostavljen, jer prototip nema izvoz podataka.
 
 **Faza 4: inventar.** Lokacije, kategorije, stvari sa slikama, pretraga, potrošni materijal sa minimumom (ulazi u spisak za kupovinu), pozajmice, QR nalepnice sa kratkom oznakom (QR vodi na `http://<server>/l/<oznaka>`), štampa na A4 i na etikete, brzo dodavanje sa telefona.
 

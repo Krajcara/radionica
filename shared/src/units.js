@@ -20,5 +20,5 @@ export function parseNumber(value) {
  */
 export function formatMm(mm) {
   const rounded = Math.round(mm * 10) / 10;
-  return rounded.toLocaleString('sr-Latn-RS', { maximumFractionDigits: 1 });
+  return rounded.toLocaleString('sr-Latn-RS', { maximumFractionDigits: 1, useGrouping: false });
 }

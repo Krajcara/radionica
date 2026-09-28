@@ -3,6 +3,8 @@
   import Users from './Users.svelte';
   import Backups from './Backups.svelte';
   import Update from './Update.svelte';
+  import CuttingSettings from './CuttingSettings.svelte';
+  import { store } from '../lib/data.svelte.js';
 
   let { me, version, onRestored } = $props();
 </script>
@@ -26,6 +28,14 @@
       <p>Radionica, verzija {version ?? '…'}</p>
     {/if}
   </section>
+
+  {#if store.cutting}
+    <section class="card widecard">
+      <h3>Krojenje i kupovina</h3>
+      <p class="muted small">Važi za sve projekte.</p>
+      <CuttingSettings canWrite={me.role !== 'gost'} />
+    </section>
+  {/if}
 
   {#if me.role === 'admin'}
     <section class="card widecard">
