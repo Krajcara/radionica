@@ -105,14 +105,14 @@ main.wrap {
   line-height: 1;
   margin: 0;
 }
-nav {
+header nav {
   display: flex;
   gap: 4px;
   margin-top: 20px;
   border-bottom: 2px solid var(--ink);
   overflow-x: auto;
 }
-nav a {
+header nav a {
   padding: 9px 18px 8px;
   font-family: var(--cond);
   font-weight: 600;
@@ -122,7 +122,7 @@ nav a {
   border-radius: 6px 6px 0 0;
   white-space: nowrap;
 }
-nav a[aria-current='page'] {
+header nav a[aria-current='page'] {
   background: var(--ink);
   color: var(--bg);
 }
@@ -970,4 +970,419 @@ legend {
   text-align: right;
   font-variant-numeric: tabular-nums;
   color: var(--ink);
+}
+
+/* ---------- inventar ---------- */
+.grow {
+  flex: 1 1 200px;
+}
+.selfend {
+  align-self: flex-end;
+}
+.formrow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+textarea {
+  font: inherit;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--bg);
+  padding: 9px 11px;
+  font-size: 16px;
+  resize: vertical;
+}
+.field textarea {
+  width: 100%;
+}
+.invtop {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.chips button {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  cursor: pointer;
+  min-height: 34px;
+}
+.chips button.on {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+.invgrid {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .invgrid {
+    grid-template-columns: 1fr;
+  }
+  .treecard {
+    order: 2;
+  }
+}
+.treecard {
+  gap: 2px;
+  padding: 12px;
+}
+.treecard h3 {
+  margin: 0 0 6px 4px;
+  font-size: 19px;
+}
+.treecard .btn {
+  margin-top: 10px;
+}
+.tnode {
+  display: flex;
+  align-items: center;
+}
+.tnode a {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 15px;
+}
+.tnode a:hover {
+  background: var(--surface2);
+}
+.tnode a.sel {
+  background: var(--ink);
+  color: var(--bg);
+}
+.tnode a.sel .muted {
+  color: var(--bg);
+  opacity: 0.7;
+}
+.tgl {
+  width: 24px;
+  flex: none;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px 0;
+}
+.crumbs {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.crumbs a {
+  color: var(--muted);
+}
+.lochead {
+  margin-bottom: 10px;
+}
+.codein {
+  width: 110px;
+  text-transform: uppercase;
+}
+.invmain {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.photos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ph {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--surface2);
+  border: 1px solid var(--line);
+}
+.ph img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.ph .del {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: var(--surface);
+}
+.addph {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  cursor: pointer;
+  color: var(--steel);
+  font: inherit;
+  font-size: 13px;
+  border-style: dashed;
+}
+.locgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+}
+.loccard {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+}
+.loccard:hover {
+  border-color: var(--ink);
+}
+.loccard img {
+  width: 100%;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+.addloc {
+  border-style: dashed;
+  color: var(--muted);
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+}
+.clickrow {
+  cursor: pointer;
+}
+.clickrow:hover td {
+  background: var(--surface2);
+}
+.linkbtn.strong {
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 600;
+  text-align: left;
+}
+.tag.warnt {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+.resrow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 2px 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.resrow:hover {
+  border-color: var(--ink);
+}
+.resrow .where {
+  grid-column: 1 / -1;
+  color: var(--steel);
+  font-size: 14px;
+}
+.stats {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  color: var(--muted);
+}
+.stats b {
+  color: var(--ink);
+  font-size: 20px;
+  font-family: var(--cond);
+}
+.plainlist {
+  margin: 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.catlist {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.catitem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 4px 4px 12px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  font-size: 15px;
+}
+dialog.editor {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  padding: 20px;
+  width: min(620px, calc(100vw - 20px));
+  max-height: calc(100vh - 20px);
+  overflow: auto;
+}
+dialog.editor::backdrop {
+  background: rgba(0, 0, 0, 0.45);
+}
+.dlg-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.dlg-head h3 {
+  margin: 0;
+}
+.loanbox {
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.loanbox h4 {
+  margin: 0;
+  font-family: var(--cond);
+  font-size: 18px;
+}
+
+/* ---------- nalepnice ---------- */
+.labels-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: var(--bg);
+  overflow: auto;
+  padding: 16px;
+}
+.labels-bar {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.labels-bar p {
+  flex-basis: 100%;
+}
+.sheet-a4 {
+  width: 210mm;
+  min-height: 297mm;
+  background: #fff;
+  color: #000;
+  padding: 21.5mm 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, 70mm);
+  grid-auto-rows: 42.3mm;
+  margin: 0 auto;
+  box-shadow: 0 0 0 1px var(--line);
+}
+.label {
+  display: flex;
+  gap: 3mm;
+  align-items: center;
+  padding: 3mm 4mm;
+  overflow: hidden;
+  break-inside: avoid;
+}
+.label .qr {
+  width: 30mm;
+  height: 30mm;
+  flex: none;
+}
+.label .qr svg {
+  width: 100%;
+  height: 100%;
+}
+.ltext {
+  min-width: 0;
+}
+.lcode {
+  font-family: var(--cond);
+  font-weight: 700;
+  font-size: 22pt;
+  line-height: 1;
+}
+.lname {
+  font-size: 10pt;
+  font-weight: 600;
+  margin-top: 1mm;
+  overflow-wrap: anywhere;
+}
+.lpath {
+  font-size: 8pt;
+  color: #444;
+  overflow-wrap: anywhere;
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 0;
+  }
+  body.printing #app > :not(main),
+  body.printing main > :not(.labels-screen),
+  body.printing .noprint {
+    display: none !important;
+  }
+  body.printing,
+  body.printing main.wrap {
+    padding: 0 !important;
+    margin: 0;
+    background: #fff;
+  }
+  body.printing .labels-screen {
+    position: static;
+    padding: 0;
+    background: #fff;
+    overflow: visible;
+  }
+  body.printing .sheet-a4 {
+    box-shadow: none;
+    margin: 0;
+  }
 }

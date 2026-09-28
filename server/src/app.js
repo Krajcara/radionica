@@ -15,6 +15,7 @@ import { readVersion } from './config.js';
 import { getSetting, openDatabase, setSetting } from './db.js';
 import { checkForUpdate, readProgress, startUpdate } from './update.js';
 import { registerWorkshopRoutes } from './workshop.js';
+import { registerInventoryRoutes } from './inventory.js';
 import {
   ROLES,
   UserError,
@@ -117,6 +118,7 @@ export function buildApp({ ctx, webDir, secureCookies = false, logger = false })
   };
 
   const workshop = registerWorkshopRoutes(app, ctx, { requireWrite });
+  const inventory = registerInventoryRoutes(app, ctx, { requireWrite });
 
   /* ---------- javno ---------- */
 
@@ -342,11 +344,18 @@ export function buildApp({ ctx, webDir, secureCookies = false, logger = false })
           .map((r) => [r.key, JSON.parse(r.value)]),
       ),
       ...workshop.exportData(),
+      ...inventory.exportData(),
     };
     const day = data.exportedAt.slice(0, 10);
     reply.header('Content-Disposition', `attachment; filename="radionica-izvoz-${day}.json"`);
     return data;
   });
+
+  /* ---------- QR nalepnice: /l/<oznaka> vodi na lokaciju u aplikaciji ---------- */
+
+  app.get('/l/:code', async (request, reply) =>
+    reply.redirect(`/#/inventar/l/${encodeURIComponent(String(request.params.code).slice(0, 20))}`),
+  );
 
   /* ---------- prikaz ---------- */
 

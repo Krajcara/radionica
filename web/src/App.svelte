@@ -8,6 +8,7 @@
   import MaterialsPage from './components/MaterialsPage.svelte';
   import StockPage from './components/StockPage.svelte';
   import ProjectsPage from './components/ProjectsPage.svelte';
+  import InventoryPage from './components/InventoryPage.svelte';
   import { loadAll, saving, store } from './lib/data.svelte.js';
 
   const pages = [
@@ -154,6 +155,8 @@
       <StockPage {canWrite} />
     {:else if current === 'sifarnik'}
       <MaterialsPage {canWrite} />
+    {:else if current === 'inventar'}
+      <InventoryPage {canWrite} />
     {:else}
       <h2>{page.label}</h2>
       <div class="empty">

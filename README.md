@@ -6,7 +6,7 @@ Aplikacija za kućnu radionicu koja radi na tvom Linux serveru, u kućnoj mreži
 - **Projekti**: upišeš delove, a aplikacija kaže da li imaš materijal, kako da ga isečeš i šta da kupiš.
 - **Inventar**: sve u radionici, sa lokacijama (regal, polica, kutija…) i QR nalepnicama.
 
-Razvoj ide po fazama iz [docs/PLAN.md](docs/PLAN.md). Trenutna verzija ima šifarnik materijala, lager, projekte sa rasporedom sečenja i spiskom za kupovinu, korisnike, rezervne kopije i ažuriranje iz aplikacije. Inventar stiže u sledećoj fazi.
+Razvoj ide po fazama iz [docs/PLAN.md](docs/PLAN.md). Trenutna verzija ima šifarnik materijala, lager, projekte sa rasporedom sečenja i spiskom za kupovinu, inventar sa lokacijama, slikama, pozajmicama i QR nalepnicama, korisnike, rezervne kopije i ažuriranje iz aplikacije.
 
 ## Instalacija na server
 

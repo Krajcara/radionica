@@ -109,7 +109,7 @@ Svaka faza se završava izdanjem koje se instalira na server i proba na pravom p
 
 **Faza 3: materijal i projekti (gotovo, v0.4.0).** Šifarnik materijala (metal sa zidom, iverica sa dezenom, šperploča sa debljinom, vrste drveta), lager sa izborom materijala sa liste, projekti sa rasporedom sečenja, spisak za kupovinu, završetak projekta sa skidanjem sa lagera i poništavanjem, kopija projekta, podešavanja krojenja. Proračun je u `shared/src/krojenje.js`. Uvoz iz prototipa je izostavljen, jer prototip nema izvoz podataka.
 
-**Faza 4: inventar.** Lokacije, kategorije, stvari sa slikama, pretraga, potrošni materijal sa minimumom (ulazi u spisak za kupovinu), pozajmice, QR nalepnice sa kratkom oznakom (QR vodi na `http://<server>/l/<oznaka>`), štampa na A4 i na etikete, brzo dodavanje sa telefona.
+**Faza 4: inventar (gotovo, v0.5.0).** Lokacije u stablu proizvoljne dubine sa vrstom i kratkom oznakom (A, A-1, A-1-1), premeštanje lokacija, kategorije koje korisnik pravi, stvari sa količinom, jedinicom, minimumom za dokupljivanje i sistemom baterija, slike (smanjene u pregledaču, čuvaju se u bazi pa ulaze u rezervne kopije), pretraga po celoj radionici, pozajmice, spisak za dokupiti, QR nalepnice na A4 (3 × 7) koje vode na `http://<server>/l/<oznaka>`, unos sa telefona sa kamerom.
 
 **Faza 5: kantovanje.** Ivice za kantovanje na delovima, već kantovane ivice na pločama u lageru, postavljanje dela uz kantovanu ivicu ploče, obrub ne seče kantovane ivice, metri trake po vrsti, odbitak debljine trake od mere za sečenje, kant traka u lageru.
 

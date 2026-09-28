@@ -63,6 +63,7 @@ export const api = {
   remove: (url) => track(del(url)),
   put: (url, body) => track(put(url, body)),
   post: (url, body) => track(post(url, body)),
+  patch: (url, body) => track(patch(url, body)),
 };
 
 export function materialsOf(kind) {
